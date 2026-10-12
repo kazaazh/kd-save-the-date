@@ -656,6 +656,9 @@ button{font:inherit;color:inherit}
   window.addEventListener("pageshow", function(e){ if(e.persisted) location.reload(); });
   setLang(lang);
   buildPeek();
+  // rebuild once fonts and images are in, so the copy inside the envelope has its final size
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if(!opened) buildPeek(); });
+  window.addEventListener("load", function(){ if(!opened) buildPeek(); });
   document.querySelectorAll(".lang button").forEach(function(b){ b.addEventListener("click", function(){ if(!opened) buildPeek(); }); });
 })();
 </script>
