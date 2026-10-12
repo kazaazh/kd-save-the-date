@@ -72,15 +72,15 @@ button{font:inherit;color:inherit}
 .pocket::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#dcc9c6,#eadcd8 50%,#e3d3cf)}
 .peekwrap{position:absolute;left:-50%;right:-50%;top:-1200px;bottom:0;overflow:hidden;transform:translateZ(0.5px);pointer-events:none;will-change:transform}
 .cardpeek *{pointer-events:none}
+.scene:not(.open) .cardpeek *{animation-play-state:paused}
 .cardpeek .cta{animation:none}
 .cardpeek{position:absolute;border-radius:3px;box-shadow:0 10px 30px rgba(90,60,60,.25);box-shadow:0 -4px 20px rgba(90,60,60,.2);transform:translateY(0);transition:transform 4.4s cubic-bezier(.4,0,.1,1) 0s}
 .glow{position:absolute;inset:-25%;pointer-events:none;opacity:0;transform:translateZ(-1.8px);transition:opacity 1.6s ease 1.05s;z-index:3;
   background:
-    radial-gradient(closest-side at 50% 29%, rgba(255,241,210,.98) 0%, rgba(255,232,190,.8) 16%, rgba(255,224,175,.42) 38%, rgba(255,220,170,.12) 58%, transparent 74%),
-    radial-gradient(closest-side at 50% 29%, rgba(255,255,240,.95) 0%, transparent 16%);
+    radial-gradient(closest-side at 50% 29%, rgba(255,246,222,1) 0%, rgba(255,236,196,.9) 18%, rgba(255,226,178,.55) 40%, rgba(255,220,170,.18) 62%, transparent 80%),
+    radial-gradient(closest-side at 50% 29%, #fffaf0 0%, rgba(255,250,240,.6) 10%, transparent 22%);
   }
-.scene.open .glow{animation:breathe-light 2.6s ease-in-out .9s infinite alternate}
-@keyframes breathe-light{from{opacity:.85}to{opacity:1}}
+
 .rays{position:absolute;inset:-70%;pointer-events:none;opacity:0;transform:translateZ(-1.8px);transition:opacity 1.8s ease 1.3s;z-index:3;
   background:repeating-conic-gradient(from 0deg at 50% 36.5%, rgba(255,240,210,0) 0deg, rgba(255,240,210,.35) 5deg, rgba(255,240,210,0) 11deg, rgba(255,240,210,0) 22deg);
   mask:radial-gradient(closest-side at 50% 36.5%, #000 0%, rgba(0,0,0,.5) 30%, transparent 58%);-webkit-mask:radial-gradient(closest-side at 50% 36.5%, #000 0%, rgba(0,0,0,.5) 30%, transparent 58%);
@@ -132,6 +132,7 @@ button{font:inherit;color:inherit}
 .scene.open .ring{display:none}
 .scene.open .panel.flap{transform:translateZ(-1.5px) rotateX(180deg)}
 .scene.open .glow{opacity:1}
+.scene.open.pull .glow{opacity:.45;transition:opacity 2.2s ease}
 .scene.open.pull .cardpeek{transform:translateY(var(--pull,-110%))}
 .scene.open .hint,.scene.open .lang{opacity:0;transition:opacity .4s;animation:none;pointer-events:none}
 .scene.open .tilt{transform:translateY(var(--dy1,0px));transition:transform 2.4s cubic-bezier(.35,0,.65,1)}
@@ -484,11 +485,11 @@ button{font:inherit;color:inherit}
     var sheet=document.querySelector("#card .sheet"); var env=document.getElementById("env");
     var cardW=Math.min(card.parentElement.clientWidth-32, 400), peekW=env.clientWidth*0.9;
     peek.innerHTML=""; var cl=sheet.cloneNode(true); cl.removeAttribute("id"); cl.querySelectorAll("[id]").forEach(function(n){ n.removeAttribute("id"); });
-    cl.style.width=cardW+"px"; cl.style.zoom=(peekW/cardW).toFixed(4); cl.querySelector(".gborder").style.inset=(cardW*0.037).toFixed(1)+"px";
-    peek.appendChild(cl);
+    var k=peekW/cardW; cl.style.width=cardW+"px"; cl.style.transformOrigin="0 0"; cl.style.transform="scale("+k.toFixed(4)+")"; cl.querySelector(".gborder").style.inset=(cardW*0.037).toFixed(1)+"px";
+    peek.appendChild(cl); peek.style.height=(cl.offsetHeight*k).toFixed(1)+"px";
     var W=env.clientWidth, H=env.clientHeight, wrap=peek.parentElement;
     peek.style.left=(0.5*W+0.05*W)+"px"; peek.style.width=peekW+"px";
-    var T=Math.ceil(peek.offsetHeight*(peekW/cardW)+0.2*H);           // just enough room above the envelope for the whole card
+    var T=Math.ceil(peek.offsetHeight+0.2*H);                          // just enough room above the envelope for the whole card
     wrap.style.top=(-T)+"px"; peek.style.top=(T+0.07*H)+"px";
     // only what is above the envelope's edge, or inside the opening of the flap, can ever be seen
     var L=0.5*W, Rr=1.5*W, y8=T+0.08*H, y40=T+0.40*H;
