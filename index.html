@@ -82,7 +82,7 @@ button{font:inherit;color:inherit}
 .cardpeek *{pointer-events:none}
 .scene:not(.open) .cardpeek *{animation-play-state:paused}
 .cardpeek .cta{animation:none}
-.cardpeek{position:absolute;border-radius:3px;box-shadow:0 10px 30px rgba(90,60,60,.25);box-shadow:0 -4px 20px rgba(90,60,60,.2);transform:translateY(0);transition:transform 4.4s cubic-bezier(.4,0,.1,1) 0s}
+.cardpeek{position:absolute;border-radius:3px;direction:ltr;box-shadow:0 10px 30px rgba(90,60,60,.25);box-shadow:0 -4px 20px rgba(90,60,60,.2);transform:translateY(0);transition:transform 4.4s cubic-bezier(.4,0,.1,1) 0s}
 .glow{position:absolute;inset:-25%;pointer-events:none;opacity:0;transform:translateZ(-1.8px);transition:opacity 1.6s ease 1.05s;z-index:3;
   background:
     radial-gradient(closest-side at 50% 29%, rgba(255,246,222,1) 0%, rgba(255,236,196,.9) 18%, rgba(255,226,178,.55) 40%, rgba(255,220,170,.18) 62%, transparent 80%),
@@ -486,7 +486,7 @@ button{font:inherit;color:inherit}
     var sheet=document.querySelector("#card .sheet"); var env=document.getElementById("env");
     var cardW=Math.min(card.parentElement.clientWidth-32, 400), peekW=env.clientWidth*0.9;
     peek.innerHTML=""; var cl=sheet.cloneNode(true); cl.removeAttribute("id"); cl.querySelectorAll("[id]").forEach(function(n){ n.removeAttribute("id"); });
-    var k=peekW/cardW; cl.style.width=cardW+"px"; cl.style.transformOrigin="0 0"; cl.style.transform="scale("+k.toFixed(4)+")"; cl.querySelector(".gborder").style.inset=(cardW*0.037).toFixed(1)+"px";
+    var k=peekW/cardW; cl.style.width=cardW+"px"; cl.style.position="absolute"; cl.style.left="0"; cl.style.top="0"; cl.style.direction=document.documentElement.getAttribute("dir")||"ltr"; cl.style.transformOrigin="0 0"; cl.style.transform="scale("+k.toFixed(4)+")"; cl.querySelector(".gborder").style.inset=(cardW*0.037).toFixed(1)+"px";
     peek.appendChild(cl); peek.style.height=(cl.offsetHeight*k).toFixed(1)+"px";
     var W=env.clientWidth, H=env.clientHeight, wrap=peek.parentElement;
     peek.style.left=(0.5*W+0.05*W)+"px"; peek.style.width=peekW+"px";
