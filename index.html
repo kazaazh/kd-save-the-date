@@ -180,7 +180,7 @@ button{font:inherit;color:inherit}
 @keyframes featherfall{0%{transform:translate(0,0) rotate(20deg);opacity:1}20%{transform:translate(14px,24px) rotate(60deg)}40%{transform:translate(-10px,50px) rotate(5deg)}60%{transform:translate(14px,78px) rotate(65deg)}80%{transform:translate(-8px,106px) rotate(15deg);opacity:.9}100%{transform:translate(10px,135px) rotate(55deg);opacity:0}}
 
 .card.show{display:block;opacity:1}
-.sheet{position:relative;border-radius:3px;overflow:hidden;outline:1.5px solid var(--olive);outline-offset:-1.5px;box-shadow:0 30px 60px -30px rgba(90,60,60,.45),0 2px 6px rgba(90,60,60,.08)}
+.sheet{position:relative;border-radius:3px;overflow:hidden;border:2px solid var(--olive);box-shadow:0 30px 60px -30px rgba(90,60,60,.45),0 2px 6px rgba(90,60,60,.08)}
 .sheet .ptop,.sheet .pmid,.sheet .pbot{position:absolute;left:0;right:0;pointer-events:none}
 .sheet .ptop{top:0;aspect-ratio:1024/553;background:url(img/card_top.jpg) top/100% auto no-repeat}
 .chand{position:absolute;left:0;right:0;top:0;aspect-ratio:1024/553;pointer-events:none;z-index:2}
@@ -205,7 +205,7 @@ button{font:inherit;color:inherit}
 .sheet{background:#f3e9e6}
 
 .sheet .inner{position:relative;z-index:1;padding:50% 10% 48%;text-align:center}
-.sheet .gborder{position:absolute;inset:14px;border:1px solid var(--olive);opacity:.85;pointer-events:none;z-index:1;border-radius:1px}
+.sheet .gborder{display:none}
 .rsvpsheet .inner{padding:54% 9% 50%}
 .press{text-shadow:0 1px 0 rgba(255,255,255,.6)}
 .bismillah{font-family:var(--font-ar-title);font-weight:700;font-size:26px;line-height:1.9;color:var(--ink);margin:0 0 2px;direction:rtl;text-shadow:0 1px 0 rgba(255,255,255,.85)}
