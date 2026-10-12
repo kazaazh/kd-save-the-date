@@ -128,7 +128,7 @@ button{font:inherit;color:inherit}
 .sealp svg{position:absolute;inset:0;width:100%;height:100%}
 .scene.cracked .sealp{transform:translate(-50%,-50%) translateZ(3px) rotateX(34deg) rotateZ(-4deg);filter:drop-shadow(0 16px 12px rgba(70,50,20,.38))}
 /* while the flap turns over, the seal crosses to the other side of it so it stays on top at the tip */
-.scene.open .sealp{transform:translate(-50%,-50%) translateZ(-0.6px);transition:transform 1.5s cubic-bezier(.45,0,.2,1) .45s,filter .6s}
+.scene.open .sealp{transform:translate(-50%,-50%) translateZ(0.6px);transition:transform 1.5s cubic-bezier(.45,0,.2,1) .45s,filter .6s}
 .crackglow{position:absolute;left:50%;top:41%;width:29%;aspect-ratio:1;transform:translate(-50%,-50%);z-index:6;pointer-events:none;opacity:0;background:radial-gradient(closest-side,rgba(255,224,150,.95),rgba(255,210,120,.4) 55%,transparent 75%);transition:opacity .4s}
 .scene.cracked .crackglow{opacity:1;animation:crackpulse 1.4s ease-out forwards}
 @keyframes crackpulse{0%{transform:translate(-50%,-50%) scale(.6)}100%{transform:translate(-50%,-50%) scale(1.6);opacity:0}}
@@ -249,14 +249,15 @@ button{font:inherit;color:inherit}
 .rsvpsheet.in{display:block}
 .rsvpsheet.in.vis{opacity:1;transform:none}
 .rsvpsheet .inner{text-align:start}
-.rsvpsheet h2{font-family:var(--font-serif);font-weight:400;font-size:30px;letter-spacing:.04em;color:var(--ink);margin:0 0 4px;text-align:center}
+.rsvpsheet h2{font-family:var(--font-serif);font-weight:400;font-size:30px;letter-spacing:.04em;color:var(--ink);margin:0 0 12px;text-align:center;line-height:1.3}
 [dir="rtl"] .rsvpsheet h2{font-family:var(--font-ar-title);font-size:27px;letter-spacing:0}
-.rsvpsheet p.lead{text-align:center;color:var(--ink-soft);margin:0 0 10px;font-size:17px;font-style:italic;font-weight:500;line-height:1.5}
-.rsvpsheet p.by{text-align:center;color:var(--ink);margin:0 0 22px;font-size:16.5px;line-height:1.5;letter-spacing:.02em;font-weight:500}
+.rsvpsheet p.lead{text-align:center;color:var(--ink-soft);margin:0 0 16px;font-size:17px;font-style:italic;font-weight:500;line-height:1.75}
+.rsvpsheet p.by{text-align:center;color:var(--ink);margin:0 0 28px;font-size:16.5px;line-height:1.8;letter-spacing:.02em;font-weight:500}
 .rsvpsheet p.by b{font-weight:700;font-size:1.15em;color:var(--olive);white-space:nowrap}
 .rsvpsheet p.by b .num{font-family:Georgia,'Times New Roman',serif;font-size:1.2em;font-weight:700;letter-spacing:.02em;font-variant-numeric:lining-nums}
 .rsvpsheet p.by b .num sup{font-size:.55em;vertical-align:.5em;margin-left:1px}
-[dir="rtl"] .rsvpsheet p.by{font-family:var(--font-ar-body);font-size:17px}
+[dir="rtl"] .rsvpsheet p.by{font-family:var(--font-ar-body);font-size:17px;line-height:2.1}
+[dir="rtl"] .rsvpsheet p.lead{line-height:2}
 [dir="rtl"] .rsvpsheet p.by b{font-size:1.2em;letter-spacing:0}
 [dir="rtl"] .rsvpsheet p.lead{font-family:var(--font-ar-body);font-style:normal}
 .f{display:grid;gap:14px;position:relative}
@@ -281,11 +282,11 @@ button{font:inherit;color:inherit}
 .err{color:#a33d55;font-size:14px;margin:0;display:none}
 .err.on{display:block}
 .thanks{text-align:center;padding:14px 4px 4px}
-.thanks .h{font-family:var(--font-serif);font-size:34px;letter-spacing:.06em;color:var(--ink);line-height:1.1;margin:0 0 8px}
+.thanks .h{font-family:var(--font-serif);font-size:34px;letter-spacing:.06em;color:var(--ink);line-height:1.3;margin:0 0 14px}
 [dir="rtl"] .thanks .h{font-family:var(--font-ar-title);font-size:30px;letter-spacing:0}
-.thanks p{color:var(--ink-soft);margin:0;font-style:italic}
+.thanks p{color:var(--ink-soft);margin:0;font-style:italic;line-height:1.8}
 [dir="rtl"] .thanks p{font-family:var(--font-ar-body);font-style:normal}
-.demo{font-size:12.5px;color:#a68d92;margin-top:10px;text-align:center}
+.demo{font-size:12.5px;color:#a68d92;margin-top:16px;text-align:center}
 .foot{margin:34px 0 0;text-align:center;font-size:12.5px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft);direction:ltr}
 
 @media (prefers-reduced-motion:reduce){
@@ -491,7 +492,7 @@ button{font:inherit;color:inherit}
     var sheet=document.querySelector("#card .sheet"); var env=document.getElementById("env");
     var cardW=Math.min(card.parentElement.clientWidth-32, 400), peekW=env.clientWidth*0.9;
     peek.innerHTML=""; var cl=sheet.cloneNode(true); cl.removeAttribute("id"); cl.querySelectorAll("[id]").forEach(function(n){ n.removeAttribute("id"); });
-    var k=peekW/cardW; cl.style.width=cardW+"px"; cl.style.position="absolute"; cl.style.left="0"; cl.style.top="0"; cl.style.direction=document.documentElement.getAttribute("dir")||"ltr"; cl.style.transformOrigin="0 0"; cl.style.transform="scale("+k.toFixed(4)+")"; cl.querySelector(".gborder").style.inset=(cardW*0.037).toFixed(1)+"px";
+    var k=peekW/cardW; cl.style.width=cardW+"px"; cl.style.position="absolute"; cl.style.left="0"; cl.style.top="0"; cl.style.direction=document.documentElement.getAttribute("dir")||"ltr"; cl.style.transformOrigin="0 0"; cl.style.transform="scale("+k.toFixed(4)+")"; cl.querySelector(".gborder").style.inset=borderInset(cardW);
     peek.appendChild(cl); peek.style.height=(cl.offsetHeight*k).toFixed(1)+"px";
     var W=env.clientWidth, H=env.clientHeight, wrap=peek.parentElement;
     peek.style.left=(0.5*W+0.05*W)+"px"; peek.style.width=peekW+"px";
@@ -546,7 +547,8 @@ button{font:inherit;color:inherit}
   }
   setInterval(function(){ if(Math.random()<.8) launchDove(); }, 5200);
 
-  function fitBorders(){ document.querySelectorAll(".sheet").forEach(function(sh){ var b=sh.querySelector(".gborder"); if(b) b.style.inset=(sh.clientWidth*0.037).toFixed(1)+"px"; }); }
+  function borderInset(w){ return (w*0.041).toFixed(1)+"px "+(w*0.0205).toFixed(1)+"px "+(w*0.0254).toFixed(1)+"px "+(w*0.0156).toFixed(1)+"px"; }
+  function fitBorders(){ document.querySelectorAll(".sheet").forEach(function(sh){ var b=sh.querySelector(".gborder"); if(b) b.style.inset=borderInset(sh.clientWidth); }); }
   fitBorders(); window.addEventListener("resize", fitBorders);
 
   // countdown: whole months + remaining days, recomputed every time the page is opened or shown
