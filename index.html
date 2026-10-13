@@ -587,20 +587,44 @@ button{font:inherit;color:inherit}
     tilt.addEventListener("pointerleave", function(){ if(opened) return; tilt.style.transform=""; tilt.style.animation=""; });
   }
 
-  // ===== Background music: starts on the first tap (the seal), loops for as long as the page is open =====
+  // ===== Background music: tries to start on landing, otherwise at the first touch; gapless loop for as long as the page is open =====
   var music=(function(){
-    var el=new Audio("audio/waltz.mp3"); el.loop=true; el.preload="auto"; el.setAttribute("playsinline",""); el.volume=1;
-    var btn=document.getElementById("musicBtn"), started=false;
-    function label(){ var m=el.muted||el.paused; btn.classList.toggle("off", m); btn.setAttribute("aria-label", m?(lang==="ar"?"تشغيل الموسيقى":"Play music"):(lang==="ar"?"كتم الموسيقى":"Mute music")); }
-    function start(){
-      if(started) return; started=true;
-      var p=el.play(); if(p&&p.catch) p.catch(function(){});
-      btn.hidden=false; label();
+    var SRC="audio/waltz.mp3", btn=document.getElementById("musicBtn");
+    var AC=window.AudioContext||window.webkitAudioContext, ctx=null, gain=null, node=null, el=null, keep=null;
+    var started=false, playing=false, muted=false, dataP=null;
+    try{ dataP = fetch(SRC).then(function(r){ return r.arrayBuffer(); }); }catch(e){ dataP=null; }
+    function noop(){}
+    function safePlay(a){ try{ var p=a.play(); if(p&&p.catch) p.catch(noop); }catch(e){} }
+    function label(){ btn.classList.toggle("off", muted||!playing); btn.setAttribute("aria-label", (muted||!playing)?(lang==="ar"?"تشغيل الموسيقى":"Play music"):(lang==="ar"?"كتم الموسيقى":"Mute music")); }
+    function loopPoints(b){ var ch=b.getChannelData(0), n=b.length, th=0.004, a=0, z=n-1; while(a<n&&Math.abs(ch[a])<th)a++; while(z>a&&Math.abs(ch[z])<th)z--; return [a/b.sampleRate,(z+1)/b.sampleRate]; }
+    function fallback(){
+      if(ctx){ try{ ctx.onstatechange=null; ctx.close(); }catch(e){} ctx=null; gain=null; node=null; } if(keep){ try{ keep.pause(); }catch(e){} keep=null; }
+      if(!el){ el=new Audio(SRC); el.loop=true; el.preload="auto"; el.setAttribute("playsinline",""); el.addEventListener("playing",function(){ playing=true; btn.hidden=false; label(); }); el.addEventListener("pause",function(){ playing=false; label(); }); }
+      el.muted=muted; safePlay(el);
     }
-    btn.addEventListener("click", function(e){ e.stopPropagation(); if(el.paused){ el.muted=false; var p=el.play(); if(p&&p.catch)p.catch(function(){}); } else { el.muted=!el.muted; } label(); });
-    el.addEventListener("play", label); el.addEventListener("pause", label);
-    document.addEventListener("visibilitychange", function(){ if(!document.hidden && started && !el.muted && el.paused){ var p=el.play(); if(p&&p.catch)p.catch(function(){}); } });
-    return { start:start, relabel:label };
+    function startWebAudio(){
+      if(!AC||!dataP) return fallback();
+      try{ ctx=new AC(); }catch(e){ return fallback(); }
+      gain=ctx.createGain(); gain.gain.value=muted?0:1; gain.connect(ctx.destination);
+      // a silent <audio> keeps the phone's audio session in playback mode, so the music is heard like any music app
+      keep=new Audio("data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//NwwAAAAAAAAAAAAEluZm8AAAAPAAAAGQAAA0MAPz8/SEhISFBQUFBXV1dXX19fX2dnZ2dvb29vd3d3d39/f3+IiIiIkJCQkJiYmJigoKCgqKioqK+vr6+3t7e3v7+/v8jIyMjQ0NDQ2NjY2ODg4ODo6Ojo8PDw8Pj4+Pj/////AAAAAExhdmM2MC4zMQAAAAAAAAAAAAAAACQCUgAAAAAAAAND4Ab03QAAAAAAAAAAAAAAAAD/8xDEAAAAA0gAAAAATEFNRTMuMTBMQU1FM//zEsQNAAADSAAAAAAuMTAwVVVVVUxBTUUzLv/zEMQbAAADSAAAAAAxMDBVVVVVTEFNRTMu//MQxCgAAANIAAAAADEwMFVVVVVMQU1FMy7/8xDENQAAA0gAAAAAMTAwVVVVVUxBTUUzLv/zEMRCAAADSAAAAAAxMDBVVVVVTEFNRTMu//MQxE8AAANIAAAAADEwMFVVVVVVVVVVVVX/8xDEXAAAA0gAAAAAVVVVVVVVVVVVVVVVVf/zEMRpAAADSAAAAABVVVVVVVVVVVVVVVVV//MSxHYAAANIAAAAAFVVVVVVVVVVVVVVVVVV//MQxIQAAANIAAAAAFVVVVVVVVVVVVVVVVX/8xDEkQAAA0gAAAAAVVVVVVVVVVVVVVVVVf/zEMSeAAADSAAAAABVVVVVVVVVVVVVVVVV//MQxKsAAANIAAAAAFVVVVVVVVVVVVVVVVX/8xDEuAAAA0gAAAAAVVVVVVVVVVVVVVVVVf/zEMTFAAADSAAAAABVVVVVVVVVVVVVVVVV//MQxNIAAANIAAAAAFVVVVVVVVVVVVVVVVX/8xLE3wAAA0gAAAAAVVVVVVVVVVVVVVVVVVX/8xDE7QAAA0gAAAAAVVVVVVVVVVVVVVVVVf/zEMTyAAADSAAAAABVVVVVVVVVVVVVVVVV//MQxPIAAANIAAAAAFVVVVVVVVVVVVVVVVX/8xDE8gAAA0gAAAAAVVVVVVVVVVVVVVVVVf/zEMTyAAADSAAAAABVVVVVVVVVVVVVVVVV//MQxPIAAANIAAAAAFVVVVVVVVVVVVVVVVX/8xDE8gAAA0gAAAAAVVVVVVVVVVVVVVVVVQ=="); keep.loop=true; keep.setAttribute("playsinline",""); safePlay(keep);
+      dataP.then(function(ab){ return new Promise(function(res,rej){ var p=ctx.decodeAudioData(ab.slice(0),res,rej); if(p&&p.then) p.then(res,rej); }); })
+        .then(function(b){ var lp=loopPoints(b); node=ctx.createBufferSource(); node.buffer=b; node.loop=true; node.loopStart=lp[0]; node.loopEnd=lp[1]; node.connect(gain); node.start(0, lp[0]); playing=(ctx.state==="running"); btn.hidden=false; label(); })
+        .catch(fallback);
+      ctx.onstatechange=function(){ if(!ctx) return; playing=(ctx.state==="running")&&!!node; label(); };
+    }
+    function start(){ if(started) return; started=true; startWebAudio(); }
+    function resume(){ // called from any user gesture
+      if(!started) start();
+      if(ctx&&ctx.state!=="running"){ ctx.resume().then(function(){ playing=!!node; label(); }, noop); if(keep) safePlay(keep); }
+      if(el&&el.paused&&!muted) safePlay(el);
+    }
+    ["pointerdown","touchend","keydown","wheel","scroll"].forEach(function(ev){ document.addEventListener(ev, function once(){ resume(); }, {passive:true, capture:true}); });
+    btn.addEventListener("click", function(e){ e.stopPropagation(); muted=!muted; if(gain&&ctx) gain.gain.setTargetAtTime(muted?0:1, ctx.currentTime, 0.05); if(el) el.muted=muted; if(!muted) resume(); label(); });
+    document.addEventListener("visibilitychange", function(){ if(!document.hidden && started && !muted) resume(); });
+    // try right away on landing (works where the browser allows sound without a touch)
+    start();
+    return { start:resume, relabel:label };
   })();
 
   var rsvp=document.getElementById("rsvp");
