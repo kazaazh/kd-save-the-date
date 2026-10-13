@@ -416,7 +416,7 @@ button{font:inherit;color:inherit}
 (function(){
   window.addEventListener("error", function(e){ try{ document.documentElement.setAttribute("data-err", String(e.message).slice(0,80)); }catch(_){} });
   // ===== RSVP endpoint: set to the Google Apps Script web app URL once connected. Empty = preview mode.
-  var RSVP_ENDPOINT = "";
+  var RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwaXw2hklhpHxOhYYsTTMlLVrqH2dTMWao5TXzeRWrhu-HHH__E7tKbXnfrCwJKX4_0/exec";
 
   var T = {
     en:{
@@ -670,6 +670,3 @@ button{font:inherit;color:inherit}
   document.querySelectorAll(".lang button").forEach(function(b){ b.addEventListener("click", function(){ if(!opened) buildPeek(); }); });
 })();
 </script>
-
-</body>
-</html>
