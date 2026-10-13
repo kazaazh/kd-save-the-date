@@ -54,6 +54,11 @@ button{font:inherit;color:inherit}
 .app{min-height:100%;display:flex;flex-direction:column;align-items:center;padding-inline:16px;padding-block:14px 48px;position:relative;z-index:1;overflow:clip}
 
 .lang{position:relative;margin:0 auto 18px;width:max-content;z-index:30;display:flex;gap:2px;background:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.8);box-shadow:0 2px 10px rgba(90,70,70,.1);border-radius:999px;padding:3px}
+.musicbtn{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:60;width:40px;height:40px;border-radius:50%;border:1px solid rgba(93,105,59,.35);background:rgba(255,255,255,.82);color:var(--olive);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(90,70,70,.14);cursor:pointer;opacity:.85;transition:opacity .3s}
+.musicbtn:hover{opacity:1}
+.musicbtn .x{display:none}
+.musicbtn.off .wv{display:none}
+.musicbtn.off .x{display:block}
 .lang button{border:0;background:transparent;border-radius:999px;padding:5px 11px;font-size:12.5px;letter-spacing:.1em;cursor:pointer;color:var(--ink-soft)}
 .lang button[aria-pressed="true"]{background:var(--olive);color:#fff}
 
@@ -410,6 +415,10 @@ button{font:inherit;color:inherit}
   </section>
 </main>
 
+<button id="musicBtn" class="musicbtn" type="button" hidden aria-label="Mute music">
+  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path class="spk" d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="wv" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path class="x" d="M16.5 9.5l5 5M21.5 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+</button>
+
 <script>
 (function(){
   window.addEventListener("error", function(e){ try{ document.documentElement.setAttribute("data-err", String(e.message).slice(0,80)); }catch(_){} });
@@ -578,9 +587,26 @@ button{font:inherit;color:inherit}
     tilt.addEventListener("pointerleave", function(){ if(opened) return; tilt.style.transform=""; tilt.style.animation=""; });
   }
 
+  // ===== Background music: starts on the first tap (the seal), loops for as long as the page is open =====
+  var music=(function(){
+    var el=new Audio("audio/waltz.mp3"); el.loop=true; el.preload="auto"; el.setAttribute("playsinline",""); el.volume=1;
+    var btn=document.getElementById("musicBtn"), started=false;
+    function label(){ var m=el.muted||el.paused; btn.classList.toggle("off", m); btn.setAttribute("aria-label", m?(lang==="ar"?"تشغيل الموسيقى":"Play music"):(lang==="ar"?"كتم الموسيقى":"Mute music")); }
+    function start(){
+      if(started) return; started=true;
+      var p=el.play(); if(p&&p.catch) p.catch(function(){});
+      btn.hidden=false; label();
+    }
+    btn.addEventListener("click", function(e){ e.stopPropagation(); if(el.paused){ el.muted=false; var p=el.play(); if(p&&p.catch)p.catch(function(){}); } else { el.muted=!el.muted; } label(); });
+    el.addEventListener("play", label); el.addEventListener("pause", label);
+    document.addEventListener("visibilitychange", function(){ if(!document.hidden && started && !el.muted && el.paused){ var p=el.play(); if(p&&p.catch)p.catch(function(){}); } });
+    return { start:start, relabel:label };
+  })();
+
   var rsvp=document.getElementById("rsvp");
   document.getElementById("env").addEventListener("click", function(){
     if(opened) return; opened=true; tilt.style.transform=""; tilt.style.animation="none";
+    music.start();
     var rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     scene.classList.add("cracked");
     setTimeout(function(){ scene.classList.add("lit"); scene.classList.add("open"); }, rm?0:350);
@@ -664,7 +690,7 @@ button{font:inherit;color:inherit}
   // rebuild once fonts and images are in, so the copy inside the envelope has its final size
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if(!opened) buildPeek(); });
   window.addEventListener("load", function(){ if(!opened) buildPeek(); });
-  document.querySelectorAll(".lang button").forEach(function(b){ b.addEventListener("click", function(){ if(!opened) buildPeek(); }); });
+  document.querySelectorAll(".lang button").forEach(function(b){ b.addEventListener("click", function(){ if(!opened) buildPeek(); music.relabel(); }); });
 })();
 </script>
 
