@@ -286,7 +286,6 @@ button{font:inherit;color:inherit}
 [dir="rtl"] .thanks .h{font-family:var(--font-ar-title);font-size:30px;letter-spacing:0}
 .thanks p{color:var(--ink-soft);margin:0;font-style:italic;line-height:1.8}
 [dir="rtl"] .thanks p{font-family:var(--font-ar-body);font-style:normal}
-.demo{font-size:12.5px;color:#a68d92;margin-top:16px;text-align:center}
 .foot{margin:34px 0 0;text-align:center;font-size:12.5px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft);direction:ltr}
 
 @media (prefers-reduced-motion:reduce){
@@ -402,7 +401,6 @@ button{font:inherit;color:inherit}
         <div class="thanks" id="thanks" hidden>
           <p class="h" data-t="thanksH">Thank you</p>
           <p data-t="thanksP">Your reply reached us. We cannot wait to see you.</p>
-          <p class="demo" id="demoNote" hidden data-t="demo">Preview: replies are not being saved yet.</p>
         </div>
       </div>
     </article>
@@ -427,7 +425,7 @@ button{font:inherit;color:inherit}
       lName:"Your name", lAttend:"Will you attend?", yes:"Yes, with joy", no:"Sadly, no",
       lCount:"Number of guests", lMsg:"A few words for Karim & Danya", err:"Please write your name first.", send:"Send",
       thanksH:"Thank you", thanksP:"Your reply reached us. We cannot wait to see you.", thanksNo:"We will miss you. Thank you for letting us know.",
-      demo:"Preview: replies are not being saved yet.", guestPh:"Guest name", sendErr:"Something went wrong. Please try again."
+      guestPh:"Guest name", sendErr:"Something went wrong. Please try again."
     },
     ar:{
       hint:"المسوا الختم", for:"بمناسبة خطوبة",
@@ -437,7 +435,7 @@ button{font:inherit;color:inherit}
       lName:"الاسم", lAttend:"هل ستحضرون؟", yes:"نعم، بكل فرح", no:"للأسف، لا",
       lCount:"عدد الضيوف", lMsg:"كلمة لكريم ودانيا", err:"من فضلك اكتب اسمك أولاً.", send:"إرسال",
       thanksH:"شكراً لكم", thanksP:"وصلنا ردكم، وبانتظاركم بشوق.", thanksNo:"سنفتقدكم، وشكراً لإخبارنا.",
-      demo:"معاينة: الردود لا تُحفظ بعد.", guestPh:"اسم الضيف", sendErr:"حدث خطأ، حاول مرة أخرى."
+      guestPh:"اسم الضيف", sendErr:"حدث خطأ، حاول مرة أخرى."
     }
   };
   var lang = "en";
@@ -652,7 +650,6 @@ button{font:inherit;color:inherit}
     function done(saved){
       document.getElementById("form").hidden=true; var th=document.getElementById("thanks"); th.hidden=false;
       th.querySelector("[data-t=thanksP]").textContent = attending==="yes"? t.thanksP : t.thanksNo;
-      document.getElementById("demoNote").hidden = saved;
       th.scrollIntoView({behavior:"smooth",block:"center"});
     }
     if(!RSVP_ENDPOINT){ setTimeout(function(){ done(false); },500); return; }
