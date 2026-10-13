@@ -64,8 +64,9 @@ button{font:inherit;color:inherit}
 
 
 .petals{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:9}
-.petal{position:absolute;top:-30px;will-change:transform;border-radius:70% 30% 60% 40%/60% 50% 50% 40%;background:radial-gradient(120% 90% at 30% 25%,#f6d3cf 0%,#efbdb9 45%,#d99c98 100%);animation:fall linear infinite,sway 3.2s ease-in-out infinite alternate}
-@keyframes sway{from{margin-left:-14px}to{margin-left:14px}}
+.petal{position:absolute;top:-30px;will-change:transform;animation:fall linear infinite}
+.petal b{display:block;width:100%;height:100%;border-radius:70% 30% 60% 40%/60% 50% 50% 40%;background:radial-gradient(120% 90% at 30% 25%,#f6d3cf 0%,#efbdb9 45%,#d99c98 100%);animation:sway 3.2s ease-in-out infinite alternate}
+@keyframes sway{from{transform:translateX(-14px)}to{transform:translateX(14px)}}
 @keyframes fall{0%{transform:translate3d(0,-40px,0) rotate(0deg)}100%{transform:translate3d(var(--dx,20px),110vh,0) rotate(420deg)}}
 
 /* ===== ENVELOPE ===== */
@@ -153,8 +154,7 @@ button{font:inherit;color:inherit}
 
 /* doves: three photographed frames, cycled for the wing beat */
 .birds{position:absolute;left:50%;top:40%;width:0;height:0;z-index:8;pointer-events:none;transform:translateZ(12px)}
-.bird{position:absolute;left:0;top:0;width:96px;height:96px;margin:-48px 0 0 -48px;opacity:0;background:url(img/dove2.png) center/contain no-repeat;will-change:transform,opacity}
-.bird.p1{background-image:url(img/dove1.png)}.bird.p3{background-image:url(img/dove3.png)}
+.bird{position:absolute;left:0;top:0;width:96px;height:96px;margin:-48px 0 0 -48px;opacity:0;will-change:transform,opacity}
 .bird.fl{transform:scaleX(-1)}
 
 .scene.open .bird{animation:fly 3.6s cubic-bezier(.3,.4,.4,1) forwards}
@@ -166,12 +166,13 @@ button{font:inherit;color:inherit}
 .scene.open .bird:nth-child(6){--tx:220px;--ty:-240px;--r:22deg;animation-delay:1.35s}
 .scene.open .bird:nth-child(7){--tx:10px;--ty:-540px;--r:0deg;animation-delay:1.45s}
 @keyframes fly{0%{opacity:0;transform:translate(0,0) scale(.45) rotate(-25deg)}10%{opacity:1}45%{transform:translate(calc(var(--tx) * .5),calc(var(--ty) * .55)) scale(.9) rotate(-18deg)}80%{opacity:1}100%{opacity:0;transform:translate(calc(var(--tx) * 1.5),calc(var(--ty) * 1.4)) scale(2.2) rotate(-10deg)}}
-.dv{position:absolute;inset:0;background:url(img/dove_sheet.png) 0 0/400% 100% no-repeat;animation:wings .46s steps(4) infinite}
-.fb .dv{animation:wings .5s steps(4) infinite, bob 1s ease-in-out infinite}
-.fb.rl .dv{animation:wings .5s steps(4) infinite, bobrl 1s ease-in-out infinite}
+.dv{position:absolute;inset:0;overflow:hidden}
+.dv::before{content:"";position:absolute;top:0;left:0;width:400%;height:100%;background:url(img/dove_sheet.png) 0 0/100% 100% no-repeat;animation:wings var(--wd,.46s) steps(4) infinite;animation-delay:var(--wdl,0s);will-change:transform}
+.fb .dv{animation:bob 1s ease-in-out infinite}
+.fb.rl .dv{animation:bobrl 1s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7%) rotate(2deg)}}
 @keyframes bobrl{0%,100%{transform:scaleX(-1) translateY(0) rotate(3deg)}50%{transform:scaleX(-1) translateY(-7%) rotate(-2deg)}}
-@keyframes wings{to{background-position-x:133.34%}}
+@keyframes wings{to{transform:translateX(-100%)}}
 .bird{background:none!important;width:120px;height:120px;margin:-60px 0 0 -60px}
 .scene.open .bird.fl{animation-name:flyfl}
 @keyframes flyfl{0%{opacity:0;transform:scaleX(-1) translate(0,0) scale(.45) rotate(-25deg)}10%{opacity:1}45%{transform:scaleX(-1) translate(calc(var(--tx) * -.5),calc(var(--ty) * .55)) scale(.9) rotate(-18deg)}80%{opacity:1}100%{opacity:0;transform:scaleX(-1) translate(calc(var(--tx) * -1.5),calc(var(--ty) * 1.4)) scale(2.2) rotate(-10deg)}}
@@ -242,10 +243,11 @@ button{font:inherit;color:inherit}
 
 .cta{margin:26px auto 0;display:inline-block;cursor:pointer;background:linear-gradient(180deg,#b3b78e,var(--sage));padding:12px 30px;font-size:14px;font-weight:700;letter-spacing:.4em;text-transform:uppercase;color:#fff;text-shadow:0 1px 1px rgba(60,70,30,.35);padding-inline-start:calc(30px + .4em);border:1.5px solid var(--olive);border-radius:999px;box-shadow:0 0 0 3px rgba(255,255,255,.55),0 8px 18px -12px rgba(60,70,30,.6);transition:transform .15s,box-shadow .15s}
 .cta:active{transform:translateY(1px)}
-.cta{display:inline-grid;gap:3px;animation:ctapulse 2.4s ease-in-out infinite}
+.cta{display:inline-grid;gap:3px;position:relative}
+.cta::after{content:"";position:absolute;inset:-3px;border-radius:999px;border:3px solid rgba(163,167,125,.45);pointer-events:none;animation:ctapulse 2.4s ease-in-out infinite;will-change:transform,opacity}
 .cta small{display:block;font-size:11.5px;letter-spacing:.3em;color:#fff;font-weight:600;text-transform:uppercase}
 [dir="rtl"] .cta small{letter-spacing:0;font-size:13px}
-@keyframes ctapulse{0%,100%{box-shadow:0 0 0 3px rgba(255,255,255,.55),0 8px 18px -12px rgba(60,70,30,.6)}50%{box-shadow:0 0 0 8px rgba(163,167,125,.28),0 10px 22px -12px rgba(60,70,30,.7)}}
+@keyframes ctapulse{0%,100%{transform:scale(1);opacity:0}50%{transform:scale(1.06);opacity:.9}}
 .cta:focus-visible{outline:2px solid var(--rose);outline-offset:4px}
 [dir="rtl"] .cta{letter-spacing:0;text-transform:none;font-family:var(--font-ar-body);font-size:16px;padding:12px 30px}
 
@@ -474,7 +476,8 @@ button{font:inherit;color:inherit}
   for(var i=0;i<12;i++){
     var p = document.createElement("i"); p.className="petal";
     var s = 9+Math.random()*10;
-    p.style.cssText = "left:"+(Math.random()*100)+"%;width:"+s+"px;height:"+(s*1.3)+"px;animation-duration:"+(12+Math.random()*10)+"s,"+(2.4+Math.random()*2)+"s;animation-delay:-"+(Math.random()*20)+"s,-"+(Math.random()*3)+"s;--dx:"+((Math.random()*140)-70)+"px;opacity:"+(0.75+Math.random()*0.25)+";";
+    p.style.cssText = "left:"+(Math.random()*100)+"%;width:"+s+"px;height:"+(s*1.3)+"px;animation-duration:"+(12+Math.random()*10)+"s;animation-delay:-"+(Math.random()*20)+"s;--dx:"+((Math.random()*140)-70)+"px;opacity:"+(0.75+Math.random()*0.25)+";";
+    p.innerHTML='<b style="animation-duration:'+(2.4+Math.random()*2).toFixed(2)+'s;animation-delay:-'+(Math.random()*3).toFixed(2)+'s"></b>';
     pw.appendChild(p);
   }
 
@@ -490,8 +493,7 @@ button{font:inherit;color:inherit}
 
   // doves
   var bw = document.getElementById("birds"), poses=["p1","","p3","","p1","p3",""];
-  var imgs={p1:"img/dove1.png","":"img/dove2.png",p3:"img/dove3.png"};
-  for(var j=0;j<7;j++){ var b=document.createElement("div"); b.className="bird "+poses[j]+(j%2?" fl":""); b.innerHTML='<i class="dv" style="animation-delay:-'+(j*0.09).toFixed(2)+'s;animation-duration:'+(0.4+j*0.03).toFixed(2)+'s"></i>'; bw.appendChild(b); }
+  for(var j=0;j<7;j++){ var b=document.createElement("div"); b.className="bird "+poses[j]+(j%2?" fl":""); b.innerHTML='<i class="dv" style="--wdl:-'+(j*0.09).toFixed(2)+'s;--wd:'+(0.4+j*0.03).toFixed(2)+'s"></i>'; bw.appendChild(b); }
 
   // the card inside the envelope is a live copy of the real card, laid out at the card's own width and zoomed to fit the envelope
   var peek=document.getElementById("cardpeek");
@@ -512,7 +514,7 @@ button{font:inherit;color:inherit}
   window.addEventListener("resize", function(){ if(!opened) buildPeek(); });
 
   // doves gliding over the card: each flight a new random path, slow, wings beating, feathers drifting down
-  var fly=document.getElementById("flyby"), doveImgs=["img/dove1.png","img/dove2.png","img/dove3.png"];
+  var fly=document.getElementById("flyby");
   function R(a,b){ return a+Math.random()*(b-a); }
   var hasOffset = CSS && CSS.supports && CSS.supports("offset-path","path('M0 0 L1 1')");
   function launchDove(){
@@ -524,7 +526,7 @@ button{font:inherit;color:inherit}
     var band=R(0.1,0.75)*H, amp=H*0.05;
     var y0=band+R(-amp,amp), y1=band+R(-amp,amp), y2=band+R(-amp,amp), y3=band+R(-amp,amp);
     var d=document.createElement("div"); d.className="fb"; d.style.width=d.style.height=size+"px";
-    d.innerHTML='<i class="dv" style="animation-duration:'+R(.42,.6).toFixed(2)+'s;animation-delay:-'+R(0,.5).toFixed(2)+'s"></i>';
+    d.innerHTML='<i class="dv" style="--wd:'+R(.42,.6).toFixed(2)+'s;--wdl:-'+R(0,.5).toFixed(2)+'s"></i>';
     fly.appendChild(d);
     var dur=R(14000,20000), anim;
     if(hasOffset){
