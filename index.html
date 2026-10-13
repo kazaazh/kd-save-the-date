@@ -589,13 +589,13 @@ button{font:inherit;color:inherit}
 
   // ===== Background music: tries to start on landing, otherwise at the first touch; gapless loop for as long as the page is open =====
   var music=(function(){
-    var SRC="audio/waltz.mp3", btn=document.getElementById("musicBtn");
+    var SRC="audio/music.mp3?v=2", btn=document.getElementById("musicBtn");
     var AC=window.AudioContext||window.webkitAudioContext, ctx=null, gain=null, node=null, el=null, keep=null;
     var started=false, playing=false, muted=false, dataP=null;
     try{ dataP = fetch(SRC).then(function(r){ return r.arrayBuffer(); }); }catch(e){ dataP=null; }
     function noop(){}
     function safePlay(a){ try{ var p=a.play(); if(p&&p.catch) p.catch(noop); }catch(e){} }
-    function label(){ btn.classList.toggle("off", muted||!playing); btn.setAttribute("aria-label", (muted||!playing)?(lang==="ar"?"تشغيل الموسيقى":"Play music"):(lang==="ar"?"كتم الموسيقى":"Mute music")); }
+    function label(){ btn.classList.toggle("off", muted); btn.setAttribute("aria-label", muted?(lang==="ar"?"تشغيل الموسيقى":"Play music"):(lang==="ar"?"كتم الموسيقى":"Mute music")); }
     function loopPoints(b){ var ch=b.getChannelData(0), n=b.length, th=0.004, a=0, z=n-1; while(a<n&&Math.abs(ch[a])<th)a++; while(z>a&&Math.abs(ch[z])<th)z--; return [a/b.sampleRate,(z+1)/b.sampleRate]; }
     function fallback(){
       if(ctx){ try{ ctx.onstatechange=null; ctx.close(); }catch(e){} ctx=null; gain=null; node=null; } if(keep){ try{ keep.pause(); }catch(e){} keep=null; }
@@ -623,7 +623,7 @@ button{font:inherit;color:inherit}
     btn.addEventListener("click", function(e){ e.stopPropagation(); muted=!muted; if(gain&&ctx) gain.gain.setTargetAtTime(muted?0:1, ctx.currentTime, 0.05); if(el) el.muted=muted; if(!muted) resume(); label(); });
     document.addEventListener("visibilitychange", function(){ if(!document.hidden && started && !muted) resume(); });
     // try right away on landing (works where the browser allows sound without a touch)
-    start();
+    btn.hidden=false; label(); start();
     return { start:resume, relabel:label };
   })();
 
