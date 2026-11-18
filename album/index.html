@@ -169,7 +169,7 @@ li.fail .bar i{background:#a4453f}
       .then(function(){ it.state="done"; it.progress=1; doneCount++; }, function(err){ it.state="fail"; try{ console.log("[album] upload failed", String(err)); }catch(e){} });
   }
 
-  // ===== vintage look: warm tone, lifted blacks, soft contrast, light grain, vignette, small date stamp =====
+  // ===== film look: soft glow, amber tone, brown shadows, lifted blacks, grain, dark edges, small date stamp =====
   function vintage(file){
     return new Promise(function(resolve, reject){
       var url=URL.createObjectURL(file), img=new Image();
@@ -179,24 +179,32 @@ li.fail .bar i{background:#a4453f}
           var cw=Math.max(1,Math.round(w*sc)), ch=Math.max(1,Math.round(h*sc));
           var c=document.createElement("canvas"); c.width=cw; c.height=ch; var x=c.getContext("2d");
           x.drawImage(img,0,0,cw,ch); URL.revokeObjectURL(url);
-          var id=x.getImageData(0,0,cw,ch), d=id.data, n=d.length, i, r, g, b, l, seed=1234567;
+          // soft glow: a small blurred copy laid back over the photo
+          var sm=document.createElement("canvas"); sm.width=Math.max(1,Math.round(cw/14)); sm.height=Math.max(1,Math.round(ch/14));
+          var sx=sm.getContext("2d"); sx.imageSmoothingEnabled=true; sx.drawImage(c,0,0,sm.width,sm.height);
+          x.imageSmoothingEnabled=true; try{ x.imageSmoothingQuality="high"; }catch(e){}
+          x.globalAlpha=0.16; x.drawImage(sm,0,0,cw,ch);
+          x.globalCompositeOperation="screen"; x.globalAlpha=0.30; x.drawImage(sm,0,0,cw,ch);
+          x.globalCompositeOperation="source-over"; x.globalAlpha=1;
+          var id=x.getImageData(0,0,cw,ch), d=id.data, n=d.length, i, r, g, b, l, t, u, gr, seed=1234567;
           for(i=0;i<n;i+=4){
             r=d[i]; g=d[i+1]; b=d[i+2];
             l=0.299*r+0.587*g+0.114*b;
-            r=l+(r-l)*0.82; g=l+(g-l)*0.82; b=l+(b-l)*0.82;                 // a little less saturated
-            r=(r-128)*0.94+128; g=(g-128)*0.94+128; b=(b-128)*0.94+128;     // softer contrast
-            r=r*1.05+10; g=g*1.01+6; b=b*0.90+8;                            // warm tone
-            r=r*0.93+18; g=g*0.93+16; b=b*0.93+15;                          // lifted blacks, gentle fade
-            seed=(seed*1664525+1013904223)|0; var gr=((seed>>>24)-128)/128*7; // fine grain
+            r=l+(r-l)*0.76; g=l+(g-l)*0.76; b=l+(b-l)*0.76;                 // less saturated
+            r=(r*0.90-128)*1.10+128; g=(g*0.90-128)*1.10+128; b=(b*0.90-128)*1.10+128; // a little darker, deeper contrast
+            l=(0.299*r+0.587*g+0.114*b)/255; if(l<0)l=0; else if(l>1)l=1; t=(1-l)*(1-l); u=l*l;
+            r=r*1.07+14*t+6*u; g=g*1.025+9*t+4*u; b=b*0.80-2*t-10*u;       // amber cast, brown shadows, creamy highlights
+            r=r*0.94+15; g=g*0.94+11; b=b*0.94+6;                           // lifted blacks
+            seed=(seed*1664525+1013904223)|0; gr=((seed>>>24)-128)/128*13;  // film grain
             d[i]=r+gr; d[i+1]=g+gr; d[i+2]=b+gr;
           }
           x.putImageData(id,0,0);
-          var R=Math.sqrt(cw*cw+ch*ch)/2, vg=x.createRadialGradient(cw/2,ch/2,R*0.55,cw/2,ch/2,R*1.02);
-          vg.addColorStop(0,"rgba(40,25,10,0)"); vg.addColorStop(1,"rgba(40,25,10,0.34)");
+          var R=Math.sqrt(cw*cw+ch*ch)/2, vg=x.createRadialGradient(cw/2,ch/2,R*0.38,cw/2,ch/2,R);
+          vg.addColorStop(0,"rgba(18,10,4,0)"); vg.addColorStop(0.5,"rgba(18,10,4,0.23)"); vg.addColorStop(1,"rgba(18,10,4,0.62)");
           x.fillStyle=vg; x.fillRect(0,0,cw,ch);
           var fs=Math.max(14, Math.round(Math.min(cw,ch)*0.026));
           x.font="600 "+fs+"px Georgia, 'Times New Roman', serif"; x.textAlign="right"; x.textBaseline="alphabetic";
-          x.shadowColor="rgba(40,25,10,.55)"; x.shadowBlur=fs*0.35; x.fillStyle="rgba(255,240,214,.88)";
+          x.shadowColor="rgba(40,25,10,.55)"; x.shadowBlur=fs*0.35; x.fillStyle="rgba(240,214,170,.9)";
           x.fillText("Karim & Danya  ·  26 . 12 . 26", cw-fs*1.1, ch-fs*1.0);
           c.toBlob(function(bl){ bl ? resolve(bl) : reject(new Error("toBlob")); }, "image/jpeg", 0.9);
         }catch(e){ reject(e); }
