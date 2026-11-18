@@ -9,11 +9,11 @@
 <meta property="og:url" content="https://kazaazh.github.io/kd-save-the-date/invitation/">
 <meta property="og:title" content="Karim & Danya · The Invitation">
 <meta property="og:description" content="26 . 12 . 26 · 6 PM · Vida Dubai Marina & Yacht Club · Tap to open">
-<meta property="og:image" content="https://kazaazh.github.io/kd-save-the-date/og.jpg">
+<meta property="og:image" content="https://kazaazh.github.io/kd-save-the-date/invitation/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://kazaazh.github.io/kd-save-the-date/og.jpg">
+<meta name="twitter:image" content="https://kazaazh.github.io/kd-save-the-date/invitation/og.jpg">
 <meta name="theme-color" content="#f7ede4">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{color-scheme:light}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
@@ -230,6 +230,34 @@ button{font:inherit;color:inherit}
 @keyframes mpulse{0%{transform:scale(.5);opacity:.9}100%{transform:scale(2.6);opacity:0}}
 .cal{display:flex;width:max-content;align-items:center;gap:8px;margin:20px auto 0;padding:8px 16px;border:1px solid rgba(93,105,59,.55);border-radius:999px;font-family:var(--font-serif);font-size:13.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--olive);text-decoration:none;background:rgba(255,255,255,.45)}
 [dir="rtl"] .cal{letter-spacing:0;font-size:15px}
+.envline{position:absolute;left:50%;top:52.5%;width:46%;transform:translate(-50%,0) translateZ(3px);text-align:center;pointer-events:none;display:grid;gap:3px;color:#4a5133;transition:opacity .35s;text-shadow:0 1px 0 rgba(255,255,255,.75)}
+.envline b{font-family:var(--font-names);font-weight:400;font-size:clamp(21px,6.4vw,28px);line-height:1.1}
+[dir="rtl"] .envline b{font-family:var(--font-ar-title);font-weight:700;font-size:clamp(20px,6vw,26px)}
+.envline i{font-style:normal;font-family:var(--font-serif);font-size:10.5px;letter-spacing:.3em;padding-inline-start:.3em;direction:ltr;opacity:.85}
+.scene.open .envline{opacity:0}
+.details{margin:22px auto 0;max-width:300px;padding:18px 10px 16px;border-top:1px solid rgba(93,105,59,.5);border-bottom:1px solid rgba(93,105,59,.5);background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,.14))}
+.drow{display:grid;justify-items:center;gap:5px}
+.drow svg{width:24px;height:24px;fill:none;stroke:var(--olive);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.dl{font-family:var(--font-serif);font-size:12.5px;font-weight:600;letter-spacing:.4em;padding-inline-start:.4em;text-transform:uppercase;color:var(--olive)}
+[dir="rtl"] .dl{letter-spacing:0;padding:0;font-size:15px}
+.dv1{font-family:var(--font-serif);font-weight:600;font-size:15px;letter-spacing:.08em;color:var(--ink-soft)}
+[dir="rtl"] .dv1{letter-spacing:0;font-size:16px}
+.dbig{font-family:var(--font-serif);font-weight:600;font-size:25px;letter-spacing:.1em;line-height:1.25;color:var(--ink);direction:ltr}
+.dven{font-size:21px;letter-spacing:.06em}
+.drule{width:44px;height:1px;background:var(--sage);margin:15px auto}
+.details + .map{margin-top:22px}
+.count{margin-top:22px;gap:14px}
+.count div{min-width:56px}
+.count b{font-size:26px}
+.count span{font-size:11.5px}
+.count .sep{font-size:22px}
+.sign{margin-top:14px}
+#card.show .rv{animation:rv .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0) * .22s + .25s)}
+#card.show .map.rv{animation-name:rvmap}
+.cardpeek .rv{opacity:0}
+@keyframes rv{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes rvmap{from{opacity:0;transform:translateY(14px) rotate(-1.2deg)}to{opacity:1;transform:rotate(-1.2deg)}}
+@media (prefers-reduced-motion:reduce){#card.show .rv{animation:none}.cardpeek .rv{opacity:1}}
 .press{text-shadow:0 1px 0 rgba(255,255,255,.6)}
 .bismillah{font-family:var(--font-ar-title);font-weight:700;font-size:26px;line-height:1.9;color:var(--ink);margin:0 0 2px;direction:rtl;text-shadow:0 1px 0 rgba(255,255,255,.85)}
 .eyebrow{font-family:var(--font-serif);font-weight:600;font-size:14px;letter-spacing:.44em;text-transform:uppercase;color:var(--ink-soft);margin:14px 0 0;padding-inline-start:.44em;direction:ltr}
@@ -355,6 +383,7 @@ button{font:inherit;color:inherit}
               <text x="50" y="74" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="7.6" font-weight="700" letter-spacing="1.4" direction="ltr">K &amp; D</text>
             </g>
           </svg></div></div>
+        <div class="envline" aria-hidden="true"><b data-t="envTitle">The Invitation</b><i>26 . 12 . 26</i></div>
         <div class="ring" aria-hidden="true"></div>
                 </div>
         <div class="peekwrap"><div class="cardpeek" id="cardpeek"></div></div>
@@ -377,21 +406,25 @@ button{font:inherit;color:inherit}
 
         <div class="rule" aria-hidden="true"><i></i><svg viewBox="0 0 16 16"><path d="M8 1c1 3 3 5 6 7-3 2-5 4-6 7-1-3-3-5-6-7 3-2 5-4 6-7z" fill="currentColor"/></svg><i></i></div>
 
-        <p class="date press">26 . 12 . 26<small>Saturday, the twenty-sixth of December</small></p>
-        <p class="time press"><span data-t="at">at</span> <b>6:00 PM</b></p>
-        <p class="place press">Vida Dubai Marina<br>&amp; Yacht Club</p>
-        <p class="floor press"><span data-t="floor">6th Floor</span> · Dubai Marina, UAE</p>
+        <p class="date press rv" style="--i:0">26 . 12 . 26</p>
 
-        <p class="quote press" data-t="quote">Some stories begin long before the first word. Ours began in our mothers' prayers. On this day, two families become one, and nothing would honour us more than having you beside us.</p>
-        <p class="sign press" data-t="sign">with all our love</p>
-
-        <div class="count" role="timer">
-          <div><b id="cm">—</b><span id="cml" data-t="months">months</span></div>
-          <div class="sep">·</div>
-          <div><b id="cd">—</b><span id="cdl" data-t="days">days</span></div>
+        <div class="details">
+          <div class="drow rv" style="--i:1">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
+            <span class="dl" data-t="when">When</span>
+            <b class="dv1" data-t="whenDay">Saturday, 26 December 2026</b>
+            <b class="dbig">6:00 PM</b>
+          </div>
+          <div class="drule rv" style="--i:2" aria-hidden="true"></div>
+          <div class="drow rv" style="--i:2">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21c-4.5-5-7-8.300-7-11.500a7 7 0 0 1 14 0c0 3.200-2.500 6.500-7 11.500z"/><circle cx="12" cy="9.500" r="2.400"/></svg>
+            <span class="dl" data-t="where">Where</span>
+            <b class="dbig dven">Vida Dubai Marina<br>&amp; Yacht Club</b>
+            <b class="dv1"><span data-t="floor">6th Floor</span> · Dubai Marina, UAE</b>
+          </div>
         </div>
 
-        <a class="map" id="mapLink" href="https://www.google.com/maps/search/?api=1&query=Vida+Dubai+Marina+%26+Yacht+Club&query_place_id=ChIJy554lFQTXz4RrxWFctVUNq4" target="_blank" rel="noopener" aria-label="Open the location in Google Maps">
+        <a class="map rv" style="--i:3" id="mapLink" href="https://www.google.com/maps/search/?api=1&query=Vida+Dubai+Marina+%26+Yacht+Club&query_place_id=ChIJy554lFQTXz4RrxWFctVUNq4" target="_blank" rel="noopener" aria-label="Open the location in Google Maps">
           <svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
             <defs>
               <pattern id="mgrid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#5d693b" stroke-opacity=".13" stroke-width=".6"/></pattern>
@@ -450,7 +483,14 @@ button{font:inherit;color:inherit}
           </svg>
           <span class="mapcap"><b>Vida Dubai Marina &amp; Yacht Club</b><i data-t="mapTap">Tap for directions</i></span>
         </a>
-        <a class="cal" id="calBtn" href="event.ics"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM4 10h16M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span data-t="cal">Add to calendar</span></a>
+        <a class="cal rv" style="--i:4" id="calBtn" href="event.ics"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM4 10h16M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span data-t="cal">Add to calendar</span></a>
+
+        <div class="count rv" style="--i:5" role="timer">
+          <div><b id="cm">—</b><span id="cml" data-t="months">months</span></div>
+          <div class="sep">·</div>
+          <div><b id="cd">—</b><span id="cdl" data-t="days">days</span></div>
+        </div>
+        <p class="sign press rv" style="--i:5" data-t="sign">with all our love</p>
         <button class="cta" id="rsvpBtn" type="button"><span data-t="rsvp">RSVP</span><small data-t="tap">tap here</small></button>
       </div>
     </article>
@@ -507,7 +547,7 @@ button{font:inherit;color:inherit}
 
   var T = {
     en:{
-      hint:"Touch the seal", for:"to the engagement of", at:"at", floor:"6th Floor", mapTap:"Tap for directions", cal:"Add to calendar",
+      hint:"Your invitation has arrived · touch the seal", envTitle:"The Invitation", when:"When", where:"Where", whenDay:"Saturday, 26 December 2026", for:"to the engagement of", at:"at", floor:"6th Floor", mapTap:"Tap for directions", cal:"Add to calendar",
       quote:"Some stories begin long before the first word. Ours began in our mothers' prayers. On this day, two families become one, and nothing would honour us more than having you beside us.",
       sign:"with all our love", note:"Keep this day in your hearts. The details will follow soon.",
       rsvp:"RSVP", tap:"tap here", rsvpTitle:"Will you be with us?", rsvpLead:"Kindly let us know if you will join us, so we can prepare the evening perfectly.", by:"We hope to celebrate this special day with you. Kindly RSVP by <b>the <span class=\"num\">20<sup>th</sup></span> of November</b>.",
@@ -517,7 +557,7 @@ button{font:inherit;color:inherit}
       guestPh:"Guest name", sendErr:"Something went wrong. Please try again."
     },
     ar:{
-      hint:"المسوا الختم", for:"لحضور خطوبة", at:"الساعة", floor:"الطابق السادس", mapTap:"اضغطوا للاتجاهات", cal:"أضف إلى التقويم",
+      hint:"وصلتكم الدعوة · المسوا الختم", envTitle:"الدعوة", when:"الموعد", where:"المكان", whenDay:"السبت ٢٦ كانون الأول (ديسمبر) ٢٠٢٦", for:"لحضور خطوبة", at:"الساعة", floor:"الطابق السادس", mapTap:"اضغطوا للاتجاهات", cal:"أضف إلى التقويم",
       quote:"بعض الحكايات تبدأ قبل أول كلمة. حكايتنا بدأت في دعاء أمهاتنا. في هذا اليوم تلتقي عائلتانا على وعدٍ يدوم العمر، ولا شيء يشرّفنا أكثر من أن تكونوا إلى جانبنا.",
       sign:"بكل الحب", note:"احفظوا هذا اليوم في قلوبكم، والتفاصيل تصلكم قريباً.",
       rsvp:"تأكيد الحضور", tap:"اضغطوا هنا", rsvpTitle:"هل ستكونون معنا؟", rsvpLead:"نرجو إعلامنا بحضوركم، لنُعدّ أمسيةً تليق بكم.", by:"نتمنى أن نحتفل بهذا اليوم المميز معكم، ونرجو تأكيد الحضور قبل <b>٢٠ نوفمبر</b>.",
