@@ -299,6 +299,15 @@ button{font:inherit;color:inherit}
 .chgbtn span{letter-spacing:.24em}
 [dir="rtl"] .chgbtn span{letter-spacing:0;font-size:17px}
 .rsvpsheet h2{font-weight:600;font-size:24px;letter-spacing:.06em}
+.hint{line-height:1.9}
+.count + .cal{margin-top:20px}
+[dir="rtl"] .dbig{direction:rtl;letter-spacing:0}
+[dir="rtl"] .dven{font-family:var(--font-ar-title);font-weight:700;font-size:23px;line-height:1.5}
+[dir="rtl"] .mapcap{direction:rtl}
+[dir="rtl"] .mapcap b{font-family:var(--font-ar-title);letter-spacing:0;font-size:16.5px}
+[dir="rtl"] .map svg text[data-t]{letter-spacing:0;font-style:normal;font-family:var(--font-ar-title);font-size:10px}
+[dir="rtl"] .map svg text[data-t="mGulf"]{font-size:13px}
+[dir="rtl"] .todaybtn small{letter-spacing:0!important;font-size:14px!important}
 .press{text-shadow:0 1px 0 rgba(255,255,255,.6)}
 .bismillah{font-family:var(--font-ar-title);font-weight:700;font-size:26px;line-height:1.9;color:var(--ink);margin:0 0 2px;direction:rtl;text-shadow:0 1px 0 rgba(255,255,255,.85)}
 .eyebrow{font-family:var(--font-serif);font-weight:600;font-size:14px;letter-spacing:.44em;text-transform:uppercase;color:var(--ink-soft);margin:14px 0 0;padding-inline-start:.44em;direction:ltr}
@@ -432,7 +441,7 @@ button{font:inherit;color:inherit}
         <div class="birds" aria-hidden="true" id="birds"></div>
       </button>
     </div>
-    <p class="hint" data-t="hint">Your invitation has arrived<i class="hd">·</i>touch the seal</p>
+    <p class="hint" data-t="hint">Your invitation has arrived<br>touch the seal</p>
   </section>
 
   <section class="card" id="card" aria-live="polite">
@@ -451,7 +460,7 @@ button{font:inherit;color:inherit}
         <div class="today rv" style="--i:0">
           <b data-t="todayH">Today is the day</b>
           <span data-t="todayP">We are waiting for you tonight at 6:00 PM</span>
-          <a class="cta todaybtn" href="https://www.google.com/maps/search/?api=1&query=Vida+Dubai+Marina+%26+Yacht+Club&query_place_id=ChIJy554lFQTXz4RrxWFctVUNq4" target="_blank" rel="noopener"><span data-t="dir">Directions</span><small>Vida Dubai Marina &amp; Yacht Club</small></a>
+          <a class="cta todaybtn" href="https://www.google.com/maps/search/?api=1&query=Vida+Dubai+Marina+%26+Yacht+Club&query_place_id=ChIJy554lFQTXz4RrxWFctVUNq4" target="_blank" rel="noopener"><span data-t="dir">Directions</span><small data-t="venue1">Vida Dubai Marina &amp; Yacht Club</small></a>
           <a class="cal" href="../album/" style="margin-top:14px"><span data-t="albumBtn">Share your photos</span></a>
         </div>
         <div class="after rv" style="--i:0">
@@ -465,14 +474,14 @@ button{font:inherit;color:inherit}
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
             <span class="dl" data-t="when">When</span>
             <b class="dv1" data-t="whenDay">Saturday, 26 December 2026</b>
-            <b class="dbig">6:00 PM</b>
+            <b class="dbig" data-t="time">6:00 PM</b>
           </div>
           <div class="drule rv" style="--i:2" aria-hidden="true"></div>
           <div class="drow rv" style="--i:2">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21c-4.5-5-7-8.300-7-11.500a7 7 0 0 1 14 0c0 3.200-2.500 6.500-7 11.500z"/><circle cx="12" cy="9.500" r="2.400"/></svg>
             <span class="dl" data-t="where">Where</span>
-            <b class="dbig dven">Vida Dubai Marina<br>&amp; Yacht Club</b>
-            <b class="dv1"><span data-t="floor">6th Floor</span> · Dubai Marina, UAE</b>
+            <b class="dbig dven" data-t="venue">Vida Dubai Marina<br>&amp; Yacht Club</b>
+            <b class="dv1"><span data-t="floor">6th Floor</span> · <span data-t="area">Dubai Marina, UAE</span></b>
           </div>
         </div>
 
@@ -511,10 +520,10 @@ button{font:inherit;color:inherit}
             <path d="M0 182Q110 176 190 164T320 138" fill="none" stroke="#f4e7d8" stroke-width="1.6"/>
             <!-- labels -->
             <g font-family="'Cormorant Garamond',Georgia,serif" fill="#4a5133" text-anchor="middle">
-              <text x="120" y="30" font-size="11" font-style="italic" letter-spacing="3" transform="rotate(-8 120 30)">Arabian Gulf</text>
-              <text x="132" y="163" font-size="7.5" letter-spacing="2.2" transform="rotate(-5 132 163)" fill-opacity=".8">SHEIKH ZAYED ROAD</text>
-              <text x="252" y="92" font-size="7.5" letter-spacing="2" transform="rotate(-18 252 92)" fill-opacity=".8">MARINA</text>
-              <text x="46" y="52" font-size="7" letter-spacing="1.6" transform="rotate(-9 46 52)" fill-opacity=".7">JBR</text>
+              <text x="120" y="30" font-size="11" font-style="italic" letter-spacing="3" transform="rotate(-8 120 30)" data-t="mGulf">Arabian Gulf</text>
+              <text x="132" y="163" font-size="7.5" letter-spacing="2.2" transform="rotate(-5 132 163)" fill-opacity=".8" data-t="mSzr">SHEIKH ZAYED ROAD</text>
+              <text x="252" y="92" font-size="7.5" letter-spacing="2" transform="rotate(-18 252 92)" fill-opacity=".8" data-t="mMarina">MARINA</text>
+              <text x="46" y="52" font-size="7" letter-spacing="1.6" transform="rotate(-9 46 52)" fill-opacity=".7" data-t="mJbr">JBR</text>
             </g>
             <!-- compass -->
             <g transform="translate(34 158)">
@@ -533,10 +542,8 @@ button{font:inherit;color:inherit}
             <rect width="320" height="200" fill="url(#mage)"/>
             <rect x="5" y="5" width="310" height="190" fill="none" stroke="#5d693b" stroke-width=".8"/>
           </svg>
-          <span class="mapcap"><b>Vida Dubai Marina &amp; Yacht Club</b><i data-t="mapTap">Tap for directions</i></span>
+          <span class="mapcap"><b data-t="venue1">Vida Dubai Marina &amp; Yacht Club</b><i data-t="mapTap">Tap for directions</i></span>
         </a>
-        <a class="cal rv" style="--i:4" id="calBtn" href="event.ics"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM4 10h16M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span data-t="cal">Add to calendar</span></a>
-
         <p class="arrive rv" style="--i:4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16V12l1.800-4.500A2 2 0 0 1 8.700 6h6.600a2 2 0 0 1 1.900 1.500L19 12v4M5 12h14M4 16h16v2.500H4zM7.500 14.200h.01M16.500 14.200h.01"/></svg><b data-t="arrH">Arrival</b><span data-t="arrP">Valet parking is available for all guests.</span></p>
 
         <p class="cdlabel rv" style="--i:5" data-t="cdLabel">Countdown</p>
@@ -545,6 +552,7 @@ button{font:inherit;color:inherit}
           <div class="sep">·</div>
           <div><b id="cd">—</b><span id="cdl" data-t="days">days</span></div>
         </div>
+        <a class="cal rv" style="--i:5" id="calBtn" href="event.ics"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM4 10h16M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span data-t="cal">Add to calendar</span></a>
         <p class="sign press rv" style="--i:5" data-t="sign">with all our love</p>
         <p class="chgq rv" style="--i:6" data-t="rsvp">Have your plans changed?</p>
         <button class="cta chgbtn rv" style="--i:6" id="rsvpBtn" type="button"><span data-t="tap">Let us know here</span></button>
@@ -602,7 +610,7 @@ button{font:inherit;color:inherit}
 
   var T = {
     en:{
-      hint:"Your invitation has arrived<i class=\"hd\">·</i>touch the seal", envTitle:"The Invitation", envDay:"Tonight", envAfter:"Thank you", hintDay:"Tonight at 6 PM<i class=\"hd\">·</i>touch the seal", hintAfter:"A word from us<i class=\"hd\">·</i>touch the seal", todayH:"Today is the day", todayP:"We are waiting for you tonight at 6:00 PM", dir:"Directions", afterH:"Thank you", afterP:"For sharing our evening and filling it with love. Your presence made it unforgettable.", albumBtn:"Share your photos", albumSub:"add them to our album", cdLabel:"Countdown", arrH:"Arrival", arrP:"Valet parking is available for all guests.", when:"When", where:"Where", whenDay:"Saturday, 26 December 2026", for:"to the engagement of", at:"at", floor:"6th Floor", mapTap:"Tap for directions", cal:"Add to calendar",
+      hint:"Your invitation has arrived<br>touch the seal", envTitle:"The Invitation", envDay:"Tonight", envAfter:"Thank you", hintDay:"Tonight at 6 PM<br>touch the seal", hintAfter:"A word from us<br>touch the seal", todayH:"Today is the day", todayP:"We are waiting for you tonight at 6:00 PM", dir:"Directions", afterH:"Thank you", afterP:"For sharing our evening and filling it with love. Your presence made it unforgettable.", albumBtn:"Share your photos", albumSub:"add them to our album", time:"6:00 PM", venue:"Vida Dubai Marina<br>&amp; Yacht Club", venue1:"Vida Dubai Marina & Yacht Club", area:"Dubai Marina, UAE", mGulf:"Arabian Gulf", mSzr:"SHEIKH ZAYED ROAD", mMarina:"MARINA", mJbr:"JBR", cdLabel:"Countdown", arrH:"Arrival", arrP:"Valet parking is available for all guests.", when:"When", where:"Where", whenDay:"Saturday, 26 December 2026", for:"to the engagement of", at:"at", floor:"6th Floor", mapTap:"Tap for directions", cal:"Add to calendar",
       quote:"Some stories begin long before the first word. Ours began in our mothers' prayers. On this day, two families become one, and nothing would honour us more than having you beside us.",
       sign:"with all our love", note:"Keep this day in your hearts. The details will follow soon.",
       rsvp:"Have your plans changed?", tap:"Let us know here", rsvpTitle:"Have your plans changed?", rsvpLead:"Let us know, and we will adjust the evening for you.", by:"We hope to celebrate this special day with you. Kindly RSVP by <b>the <span class=\"num\">20<sup>th</sup></span> of November</b>.",
@@ -612,7 +620,7 @@ button{font:inherit;color:inherit}
       guestPh:"Guest name", sendErr:"Something went wrong. Please try again.", chgCount:"Our number of guests has changed"
     },
     ar:{
-      hint:"وصلتكم الدعوة<i class=\"hd\">·</i>المسوا الختم", envTitle:"الدعوة", envDay:"الليلة", envAfter:"شكراً لكم", hintDay:"الليلة الساعة ٦<i class=\"hd\">·</i>المسوا الختم", hintAfter:"كلمة منّا<i class=\"hd\">·</i>المسوا الختم", todayH:"اليوم موعدنا", todayP:"بانتظاركم الليلة الساعة ٦ مساءً", dir:"الاتجاهات", afterH:"شكراً لكم", afterP:"لأنكم شاركتمونا أمسيتنا وملأتموها حبّاً. حضوركم جعلها لا تُنسى.", albumBtn:"شاركونا صوركم", albumSub:"أضيفوها إلى ألبومنا", cdLabel:"العدّ التنازلي", arrH:"الوصول", arrP:"خدمة صفّ السيارات (الفاليه) متوفّرة لجميع الضيوف.", when:"الموعد", where:"المكان", whenDay:"السبت ٢٦ كانون الأول (ديسمبر) ٢٠٢٦", for:"لحضور خطوبة", at:"الساعة", floor:"الطابق السادس", mapTap:"اضغطوا للاتجاهات", cal:"أضف إلى التقويم",
+      hint:"وصلتكم الدعوة<br>المسوا الختم", envTitle:"الدعوة", envDay:"الليلة", envAfter:"شكراً لكم", hintDay:"الليلة الساعة ٦<br>المسوا الختم", hintAfter:"كلمة منّا<br>المسوا الختم", todayH:"اليوم موعدنا", todayP:"بانتظاركم الليلة الساعة ٦ مساءً", dir:"الاتجاهات", afterH:"شكراً لكم", afterP:"لأنكم شاركتمونا أمسيتنا وملأتموها حبّاً. حضوركم جعلها لا تُنسى.", albumBtn:"شاركونا صوركم", albumSub:"أضيفوها إلى ألبومنا", time:"٦:٠٠ مساءً", venue:"فيدا دبي مارينا<br>ونادي اليخوت", venue1:"فيدا دبي مارينا ونادي اليخوت", area:"دبي مارينا، الإمارات", mGulf:"الخليج العربي", mSzr:"شارع الشيخ زايد", mMarina:"المارينا", mJbr:"جي بي آر", cdLabel:"العدّ التنازلي", arrH:"الوصول", arrP:"خدمة صفّ السيارات (الفاليه) متوفّرة لجميع الضيوف.", when:"الموعد", where:"المكان", whenDay:"السبت ٢٦ كانون الأول (ديسمبر) ٢٠٢٦", for:"لحضور خطوبة", at:"الساعة", floor:"الطابق السادس", mapTap:"اضغطوا للاتجاهات", cal:"أضف إلى التقويم",
       quote:"بعض الحكايات تبدأ قبل أول كلمة. حكايتنا بدأت في دعاء أمهاتنا. في هذا اليوم تلتقي عائلتانا على وعدٍ يدوم العمر، ولا شيء يشرّفنا أكثر من أن تكونوا إلى جانبنا.",
       sign:"بكل الحب", note:"احفظوا هذا اليوم في قلوبكم، والتفاصيل تصلكم قريباً.",
       rsvp:"هل تغيّرت خططكم؟", tap:"أخبرونا هنا", rsvpTitle:"هل تغيّرت خططكم؟", rsvpLead:"أخبرونا لنرتّب الأمسية على أساسه.", by:"نتمنى أن نحتفل بهذا اليوم المميز معكم، ونرجو تأكيد الحضور قبل <b>٢٠ نوفمبر</b>.",
@@ -639,7 +647,7 @@ button{font:inherit;color:inherit}
       if(k==="names"){ el.innerHTML = l==="ar" ? "<span>كريم</span><span class=\"amp\">و</span><span>دانيا</span>" : "<span>Karim</span><span class=\"amp\">&amp;</span><span>Danya</span>"; return; }
       if(k==="months"||k==="days") return;
       if(!(k in t)) return;
-      if(k==="by"||k==="hint"){ el.innerHTML = t[k]; return; }
+      if(k==="by"||k==="hint"||k==="venue"){ el.innerHTML = t[k]; return; }
       el.textContent = t[k];
     });
     document.querySelectorAll(".lang button").forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-lang")===l)); });
