@@ -258,6 +258,12 @@ button{font:inherit;color:inherit}
 @keyframes rv{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes rvmap{from{opacity:0;transform:translateY(14px) rotate(-1.2deg)}to{opacity:1;transform:rotate(-1.2deg)}}
 @media (prefers-reduced-motion:reduce){#card.show .rv{animation:none}.cardpeek .rv{opacity:1}}
+.chg{display:grid;gap:3px;margin:22px auto 0;padding:6px 10px;background:none;border:0;cursor:pointer;font-family:var(--font-serif);color:var(--ink-soft);-webkit-tap-highlight-color:transparent}
+.chg span{font-size:16px;font-style:italic;font-weight:500}
+.chg small{font-size:12px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--olive);text-decoration:underline;text-underline-offset:4px;padding-inline-start:.3em}
+[dir="rtl"] .chg span{font-style:normal;font-size:17px}
+[dir="rtl"] .chg small{letter-spacing:0;font-size:14px;padding:0}
+.seg.seg3{display:grid;grid-template-columns:1fr;gap:8px}
 .press{text-shadow:0 1px 0 rgba(255,255,255,.6)}
 .bismillah{font-family:var(--font-ar-title);font-weight:700;font-size:26px;line-height:1.9;color:var(--ink);margin:0 0 2px;direction:rtl;text-shadow:0 1px 0 rgba(255,255,255,.85)}
 .eyebrow{font-family:var(--font-serif);font-weight:600;font-size:14px;letter-spacing:.44em;text-transform:uppercase;color:var(--ink-soft);margin:14px 0 0;padding-inline-start:.44em;direction:ltr}
@@ -491,26 +497,26 @@ button{font:inherit;color:inherit}
           <div><b id="cd">—</b><span id="cdl" data-t="days">days</span></div>
         </div>
         <p class="sign press rv" style="--i:5" data-t="sign">with all our love</p>
-        <button class="cta" id="rsvpBtn" type="button"><span data-t="rsvp">RSVP</span><small data-t="tap">tap here</small></button>
+        <button class="chg rv" style="--i:6" id="rsvpBtn" type="button"><span data-t="rsvp">Have your plans changed?</span><small data-t="tap">let us know</small></button>
       </div>
     </article>
 
     <article class="sheet rsvpsheet" id="rsvp">
       <div class="pmid"></div><div class="ptop"></div><div class="pbot"></div><div class="gborder" aria-hidden="true"></div><div class="chand" aria-hidden="true"></div>
       <div class="inner">
-        <h2 data-t="rsvpTitle">Will you be with us?</h2>
-        <p class="lead" data-t="rsvpLead">Kindly let us know if you will join us, so we can prepare the evening perfectly.</p>
-        <p class="by" data-t="by">We hope to celebrate this special day with you. Kindly RSVP by <b>the <span class="num">20<sup>th</sup></span> of November</b>.</p>
+        <h2 data-t="rsvpTitle">Have your plans changed?</h2>
+        <p class="lead" data-t="rsvpLead">Let us know, and we will adjust the evening for you.</p>
         <form class="f" id="form" novalidate>
           <label><span data-t="lName">Your name</span><input id="name" name="name" autocomplete="name" required></label>
           <div>
-            <label style="margin-bottom:6px"><span data-t="lAttend">Will you attend?</span></label>
-            <div class="seg">
-              <label style="position:relative"><input type="radio" name="attending" value="yes" id="att-yes" checked><span data-t="yes">Yes, with joy</span></label>
-              <label style="position:relative"><input type="radio" name="attending" value="no" id="att-no"><span data-t="no">Sadly, no</span></label>
+            <label style="margin-bottom:6px"><span data-t="lAttend">What has changed?</span></label>
+            <div class="seg seg3">
+              <label style="position:relative"><input type="radio" name="attending" value="no" id="att-no" checked><span data-t="no">I can no longer attend</span></label>
+              <label style="position:relative"><input type="radio" name="attending" value="yes" id="att-yes"><span data-t="yes">I can attend after all</span></label>
+              <label style="position:relative"><input type="radio" name="attending" value="count" id="att-count"><span data-t="chgCount">Our number of guests has changed</span></label>
             </div>
           </div>
-          <div id="whoBlock">
+          <div id="whoBlock" style="display:none">
             <label><span data-t="lCount">Number of guests</span></label>
             <div class="pm">
               <button type="button" id="minus" aria-label="fewer">−</button>
@@ -519,13 +525,13 @@ button{font:inherit;color:inherit}
             </div>
             <div class="guests-wrap" id="guests" style="margin-top:10px"></div>
           </div>
-          <label id="msgBlock" hidden><span data-t="lMsg">A few words for Karim &amp; Danya</span><textarea id="msg" name="message"></textarea></label>
+          <label id="msgBlock"><span data-t="lMsg">A short note (optional)</span><textarea id="msg" name="message"></textarea></label>
           <p class="err" id="err" data-t="err">Please write your name first.</p>
           <button class="send" id="send" type="submit" data-t="send">Send</button>
         </form>
         <div class="thanks" id="thanks" hidden>
           <p class="h" data-t="thanksH">Thank you</p>
-          <p data-t="thanksP">Your reply reached us. We cannot wait to see you.</p>
+          <p data-t="thanksP">Thank you for letting us know.</p>
         </div>
       </div>
     </article>
@@ -550,21 +556,21 @@ button{font:inherit;color:inherit}
       hint:"Your invitation has arrived · touch the seal", envTitle:"The Invitation", when:"When", where:"Where", whenDay:"Saturday, 26 December 2026", for:"to the engagement of", at:"at", floor:"6th Floor", mapTap:"Tap for directions", cal:"Add to calendar",
       quote:"Some stories begin long before the first word. Ours began in our mothers' prayers. On this day, two families become one, and nothing would honour us more than having you beside us.",
       sign:"with all our love", note:"Keep this day in your hearts. The details will follow soon.",
-      rsvp:"RSVP", tap:"tap here", rsvpTitle:"Will you be with us?", rsvpLead:"Kindly let us know if you will join us, so we can prepare the evening perfectly.", by:"We hope to celebrate this special day with you. Kindly RSVP by <b>the <span class=\"num\">20<sup>th</sup></span> of November</b>.",
-      lName:"Your name", lAttend:"Will you attend?", yes:"Yes, with joy", no:"Sadly, no",
-      lCount:"Number of guests", lMsg:"A few words for Karim & Danya", err:"Please write your name first.", send:"Send",
-      thanksH:"Thank you", thanksP:"Your reply reached us. We cannot wait to see you.", thanksNo:"We will miss you. Thank you for letting us know.",
-      guestPh:"Guest name", sendErr:"Something went wrong. Please try again."
+      rsvp:"Have your plans changed?", tap:"let us know", rsvpTitle:"Have your plans changed?", rsvpLead:"Let us know, and we will adjust the evening for you.", by:"We hope to celebrate this special day with you. Kindly RSVP by <b>the <span class=\"num\">20<sup>th</sup></span> of November</b>.",
+      lName:"Your name", lAttend:"What has changed?", yes:"I can attend after all", no:"I can no longer attend",
+      lCount:"Number of guests", lMsg:"A short note (optional)", err:"Please write your name first.", send:"Send",
+      thanksH:"Thank you", thanksP:"Thank you for letting us know. We cannot wait to see you.", thanksNo:"Thank you for letting us know. We will miss you.",
+      guestPh:"Guest name", sendErr:"Something went wrong. Please try again.", chgCount:"Our number of guests has changed"
     },
     ar:{
       hint:"وصلتكم الدعوة · المسوا الختم", envTitle:"الدعوة", when:"الموعد", where:"المكان", whenDay:"السبت ٢٦ كانون الأول (ديسمبر) ٢٠٢٦", for:"لحضور خطوبة", at:"الساعة", floor:"الطابق السادس", mapTap:"اضغطوا للاتجاهات", cal:"أضف إلى التقويم",
       quote:"بعض الحكايات تبدأ قبل أول كلمة. حكايتنا بدأت في دعاء أمهاتنا. في هذا اليوم تلتقي عائلتانا على وعدٍ يدوم العمر، ولا شيء يشرّفنا أكثر من أن تكونوا إلى جانبنا.",
       sign:"بكل الحب", note:"احفظوا هذا اليوم في قلوبكم، والتفاصيل تصلكم قريباً.",
-      rsvp:"تأكيد الحضور", tap:"اضغطوا هنا", rsvpTitle:"هل ستكونون معنا؟", rsvpLead:"نرجو إعلامنا بحضوركم، لنُعدّ أمسيةً تليق بكم.", by:"نتمنى أن نحتفل بهذا اليوم المميز معكم، ونرجو تأكيد الحضور قبل <b>٢٠ نوفمبر</b>.",
-      lName:"الاسم", lAttend:"هل ستحضرون؟", yes:"نعم، بكل فرح", no:"للأسف، لا",
-      lCount:"عدد الضيوف", lMsg:"كلمة لكريم ودانيا", err:"من فضلك اكتب اسمك أولاً.", send:"إرسال",
-      thanksH:"شكراً لكم", thanksP:"وصلنا ردكم، وبانتظاركم بشوق.", thanksNo:"سنفتقدكم، وشكراً لإخبارنا.",
-      guestPh:"اسم الضيف", sendErr:"حدث خطأ، حاول مرة أخرى."
+      rsvp:"هل تغيّرت خططكم؟", tap:"أخبرونا", rsvpTitle:"هل تغيّرت خططكم؟", rsvpLead:"أخبرونا لنرتّب الأمسية على أساسه.", by:"نتمنى أن نحتفل بهذا اليوم المميز معكم، ونرجو تأكيد الحضور قبل <b>٢٠ نوفمبر</b>.",
+      lName:"الاسم", lAttend:"ما الذي تغيّر؟", yes:"صار بإمكاني الحضور", no:"لن أتمكّن من الحضور",
+      lCount:"عدد الضيوف", lMsg:"ملاحظة قصيرة (اختياري)", err:"من فضلك اكتب اسمك أولاً.", send:"إرسال",
+      thanksH:"شكراً لكم", thanksP:"شكراً لإخباركم لنا، وبانتظاركم بشوق.", thanksNo:"شكراً لإخباركم لنا، سنفتقدكم.",
+      guestPh:"اسم الضيف", sendErr:"حدث خطأ، حاول مرة أخرى.", chgCount:"تغيّر عدد الضيوف"
     }
   };
   var lang = "en";
@@ -806,22 +812,23 @@ button{font:inherit;color:inherit}
   }
   document.getElementById("plus").addEventListener("click",function(){ if(count<12){count++;renderGuests();} });
   document.getElementById("minus").addEventListener("click",function(){ if(count>1){count--;renderGuests();} });
-  document.querySelectorAll('input[name="attending"]').forEach(function(r){ r.addEventListener("change",function(){ var no = r.value==="no"&&r.checked; document.getElementById("whoBlock").style.display = no ? "none":""; document.getElementById("msgBlock").hidden = !no; }); });
+  document.querySelectorAll('input[name="attending"]').forEach(function(r){ r.addEventListener("change",function(){ var v=document.querySelector('input[name="attending"]:checked').value; document.getElementById("whoBlock").style.display = v==="no" ? "none":""; }); });
 
   document.getElementById("form").addEventListener("submit", function(e){
     e.preventDefault();
     var t=T[lang], err=document.getElementById("err"), name=document.getElementById("name").value.trim();
     if(!name){ err.textContent=t.err; err.classList.add("on"); document.getElementById("name").focus(); return; }
     err.classList.remove("on");
-    var attending=document.querySelector('input[name="attending"]:checked').value;
+    var choice=document.querySelector('input[name="attending"]:checked').value, attending=choice==="no"?"no":"yes";
+    var tagTxt={no:"can no longer attend",yes:"can attend after all",count:"number of guests changed"}[choice];
     var names=[].map.call(guests.querySelectorAll("input"),function(i){return i.value.trim();}).filter(Boolean);
     var payload={ name:name, attending:attending,
-      guests: attending==="yes"?count:0, guestNames: attending==="yes"?names.join(", "):"", message:document.getElementById("msg").value.trim(),
+      guests: attending==="yes"?count:0, guestNames: attending==="yes"?names.join(", "):"", message:("[UPDATE: "+tagTxt+"] "+document.getElementById("msg").value.trim()).trim(),
       language:lang, submittedAt:new Date().toISOString(), userAgent:navigator.userAgent.slice(0,120) };
     var send=document.getElementById("send"); send.disabled=true;
     function done(saved){
       document.getElementById("form").hidden=true; var th=document.getElementById("thanks"); th.hidden=false;
-      th.querySelector("[data-t=thanksP]").textContent = attending==="yes"? t.thanksP : t.thanksNo;
+      th.querySelector("[data-t=thanksP]").textContent = choice==="no" ? t.thanksNo : t.thanksP;
       th.scrollIntoView({behavior:"smooth",block:"center"});
     }
     if(!RSVP_ENDPOINT){ setTimeout(function(){ done(false); },500); return; }
