@@ -25,7 +25,7 @@ button,input{font:inherit;color:inherit}
 .lang{margin:14px auto 0;width:max-content;display:flex;gap:2px;background:rgba(255,255,255,.8);box-shadow:0 2px 10px rgba(90,70,70,.1);border-radius:999px;padding:3px}
 .lang button{border:0;background:transparent;border-radius:999px;padding:5px 11px;font-size:12.5px;letter-spacing:.1em;cursor:pointer;color:var(--ink-soft)}
 .lang button[aria-pressed="true"]{background:var(--olive);color:#fff}
-.card{margin-top:16px;background:linear-gradient(180deg,#f6eeea,#f1e6e0);border:2px solid var(--olive);outline:1px solid rgba(93,105,59,.35);outline-offset:-8px;padding:34px 22px 30px;box-shadow:0 18px 40px -28px rgba(60,50,40,.6)}
+.card{margin-top:22px;background:linear-gradient(180deg,#f6eeea,#f1e6e0);border:2px solid var(--olive);outline:1px solid rgba(93,105,59,.35);outline-offset:-8px;padding:34px 22px 30px;box-shadow:0 18px 40px -28px rgba(60,50,40,.6)}
 .eyebrow{font-size:13px;font-weight:600;letter-spacing:.42em;padding-inline-start:.42em;text-transform:uppercase;color:var(--ink-soft);margin:0;direction:ltr}
 h1{font-family:var(--script);font-weight:400;font-size:46px;line-height:1.15;margin:6px 0 0}
 [dir="rtl"] h1{font-family:var(--ar);font-weight:700;font-size:34px;line-height:1.5}
@@ -69,7 +69,6 @@ li.fail .bar i{background:#a4453f}
 </head>
 <body>
 <div class="wrap">
-  <div class="lang" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="ar" aria-pressed="false">عربي</button></div>
   <main class="card">
     <p class="eyebrow">Karim &amp; Danya</p>
     <h1 data-t="h">Share your moments</h1>
@@ -109,11 +108,10 @@ li.fail .bar i{background:#a4453f}
       prep:"تحضير", wait:"انتظار", ok:"تمّ", fail:"فشل", retry:"إعادة", photoN:"صورة", videoN:"فيديو", preview:"معاينة فقط: الألبوم غير متصل بعد." }
   };
   var lang="en";
-  try{ var h=(location.hash||"").replace("#",""); if(h==="ar"||h==="en") lang=h; else { var s=localStorage.getItem("kd-lang"); if(s==="ar"||s==="en") lang=s; } }catch(e){}
   function setLang(l){ lang=l; document.documentElement.lang=l; document.documentElement.dir=l==="ar"?"rtl":"ltr";
     document.querySelectorAll("[data-t]").forEach(function(el){ var v=T[l][el.getAttribute("data-t")]; if(typeof v==="string") el.textContent=v; });
     document.querySelectorAll(".lang button").forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-lang")===l)); });
-    try{ localStorage.setItem("kd-lang", l); }catch(e){} refreshStatus(); }
+    refreshStatus(); }
   document.querySelectorAll(".lang button").forEach(function(b){ b.addEventListener("click", function(){ setLang(b.getAttribute("data-lang")); }); });
 
   var guest=document.getElementById("guest");
