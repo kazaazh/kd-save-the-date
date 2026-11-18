@@ -206,10 +206,6 @@ li.fail .bar i{background:#a4453f}
           var vg=x.createRadialGradient(cx,cy,RR*0.42,cx,cy,RR);
           vg.addColorStop(0,"rgba(10,9,10,0)"); vg.addColorStop(0.5,"rgba(10,9,10,0.22)"); vg.addColorStop(1,"rgba(10,9,10,0.66)");
           x.fillStyle=vg; x.fillRect(0,0,cw,ch);
-          var fs=Math.max(14, Math.round(Math.min(cw,ch)*0.032));
-          x.font="700 "+fs+"px 'Courier New', Courier, monospace"; x.textAlign="right"; x.textBaseline="alphabetic";
-          x.shadowColor="rgba(255,120,20,.55)"; x.shadowBlur=fs*0.3; x.fillStyle="rgba(255,150,40,.95)";
-          x.fillText("26 12 '26", cw-fs*1.1, ch-fs*1.0);
           c.toBlob(function(bl){ bl ? resolve(bl) : reject(new Error("toBlob")); }, "image/jpeg", 0.9);
         }catch(e){ reject(e); }
       };
