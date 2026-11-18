@@ -87,7 +87,7 @@ li.fail .bar i{background:#a4453f}
     <p class="keep" id="keep" hidden data-t="keep">Please keep this page open until everything is sent.</p>
     <ul class="queue" id="queue"></ul>
   </main>
-  <p class="foot">26 · 12 · 26 &nbsp;·&nbsp; DUBAI</p>
+  <p class="foot">26 · 12 · 26 &nbsp;·&nbsp; DUBAI<span style="opacity:.45;letter-spacing:.1em"> &nbsp;·&nbsp; v8</span></p>
 </div>
 
 <script>
@@ -173,17 +173,22 @@ li.fail .bar i{background:#a4453f}
   // if its shape differs from the window, the print simply shows a little more white paper on two sides.
   var FRAMES={ up:{src:"frame/frame-up.webp", w:1920, h:2560, win:[480,572,1442,1906], top:[214,210,207], bot:[214,210,207]},
                wide:{src:"frame/frame-wide.webp", w:2560, h:1920, win:[484,382,2074,1456], top:[223,221,218], bot:[223,221,218]} };
-  Object.keys(FRAMES).forEach(function(k){ var f=FRAMES[k]; f.img=new Image(); f.ready=false;
-    f.img.onload=function(){ f.ready=true;
+  Object.keys(FRAMES).forEach(function(k){ var f=FRAMES[k]; f.img=new Image(); f.ready=false; f.failed=false; f.waiters=[];
+    f.img.onerror=function(){ f.failed=true; f.waiters.splice(0).forEach(function(fn){ fn(); }); };
+    f.img.onload=function(){ f.ready=true; f.waiters.splice(0).forEach(function(fn){ fn(); });
       try{ var t=document.createElement("canvas"); t.width=f.w; t.height=f.h; var tx=t.getContext("2d"); tx.drawImage(f.img,0,0);
         var mx=Math.round((f.win[0]+f.win[2])/2), a1=tx.getImageData(mx-60,f.win[1]-26,120,8).data, a2=tx.getImageData(mx-60,f.win[3]+18,120,8).data;
         var avg=function(d){ var r=0,g=0,b=0,n=d.length/4,i; for(i=0;i<d.length;i+=4){ r+=d[i]; g+=d[i+1]; b+=d[i+2]; } return [Math.round(r/n),Math.round(g/n),Math.round(b/n)]; };
         f.top=avg(a1); f.bot=avg(a2); t.width=t.height=1; }catch(e){}
     };
     f.img.src=f.src; });
-  function frameIt(c){
+  // waits for the frame picture if the guest was quicker than the download (up to 20 seconds)
+  function frameFor(c){
     var f = (c.width/c.height > 1.03) ? FRAMES.wide : FRAMES.up;
-    if(!f.ready) return c;
+    return new Promise(function(res){ if(f.ready||f.failed) return res(f); var done=false, fin=function(){ if(!done){ done=true; res(f); } }; f.waiters.push(fin); setTimeout(fin, 20000); });
+  }
+  function frameIt(c, f){
+    if(!f || !f.ready) return c;
     var o=document.createElement("canvas"); o.width=f.w; o.height=f.h; var x=o.getContext("2d");
     var wx=f.win[0], wy=f.win[1], ww=f.win[2]-f.win[0], wh=f.win[3]-f.win[1];
     var g=x.createLinearGradient(0,wy,0,wy+wh); g.addColorStop(0,"rgb("+f.top.join(",")+")"); g.addColorStop(1,"rgb("+f.bot.join(",")+")");
@@ -292,8 +297,10 @@ li.fail .bar i{background:#a4453f}
             }
           }
           x.putImageData(id,0,0);
-          var outc=c; try{ outc=frameIt(c); }catch(e){ outc=c; }
-          outc.toBlob(function(bl){ bl ? resolve(bl) : reject(new Error("toBlob")); }, "image/jpeg", 0.9);
+          frameFor(c).then(function(f){
+            var outc=c; try{ outc=frameIt(c, f); }catch(e){ outc=c; try{ console.log("[album] frame failed", String(e)); }catch(_){} }
+            outc.toBlob(function(bl){ bl ? resolve(bl) : reject(new Error("toBlob")); }, "image/jpeg", 0.9);
+          });
         }catch(e){ reject(e); }
       };
       img.onerror=function(){ URL.revokeObjectURL(url); reject(new Error("decode")); };
