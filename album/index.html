@@ -183,29 +183,33 @@ li.fail .bar i{background:#a4453f}
           var sm=document.createElement("canvas"); sm.width=Math.max(1,Math.round(cw/14)); sm.height=Math.max(1,Math.round(ch/14));
           var sx=sm.getContext("2d"); sx.imageSmoothingEnabled=true; sx.drawImage(c,0,0,sm.width,sm.height);
           x.imageSmoothingEnabled=true; try{ x.imageSmoothingQuality="high"; }catch(e){}
-          x.globalAlpha=0.16; x.drawImage(sm,0,0,cw,ch);
-          x.globalCompositeOperation="screen"; x.globalAlpha=0.30; x.drawImage(sm,0,0,cw,ch);
+          x.globalAlpha=0.10; x.drawImage(sm,0,0,cw,ch);
+          x.globalCompositeOperation="screen"; x.globalAlpha=0.26; x.drawImage(sm,0,0,cw,ch);
           x.globalCompositeOperation="source-over"; x.globalAlpha=1;
-          var id=x.getImageData(0,0,cw,ch), d=id.data, n=d.length, i, r, g, b, l, t, u, gr, seed=1234567;
-          for(i=0;i<n;i+=4){
-            r=d[i]; g=d[i+1]; b=d[i+2];
-            l=0.299*r+0.587*g+0.114*b;
-            r=l+(r-l)*0.76; g=l+(g-l)*0.76; b=l+(b-l)*0.76;                 // less saturated
-            r=(r*0.94-128)*1.10+128; g=(g*0.94-128)*1.10+128; b=(b*0.94-128)*1.10+128; // a little darker, deeper contrast
-            l=(0.299*r+0.587*g+0.114*b)/255; if(l<0)l=0; else if(l>1)l=1; t=(1-l)*(1-l); u=l*l;
-            r=r*1.02+13*t+5*u; g=g*1.005+9*t+5*u; b=b*0.95+3*u;            // faint warmth, brown shadows, clean bright highlights
-            r=r*0.94+14; g=g*0.94+11; b=b*0.94+8;                           // lifted blacks
-            seed=(seed*1664525+1013904223)|0; gr=((seed>>>24)-128)/128*13;  // film grain
-            d[i]=r+gr; d[i+1]=g+gr; d[i+2]=b+gr;
+          var id=x.getImageData(0,0,cw,ch), d=id.data, i=0, r, g, b, l, t, u, gr, fl, px, py, dx, dy, seed=1234567;
+          var cx=cw/2, cy=ch*0.46, RR=Math.sqrt(cw*cw+ch*ch)/2;
+          for(py=0;py<ch;py++){ dy=py-cy;
+            for(px=0;px<cw;px++, i+=4){ dx=px-cx;
+              fl=1-Math.sqrt(dx*dx+dy*dy)/RR/0.75; fl=1+0.16*(fl>0?fl:0);       // flash: brighter toward the middle
+              r=d[i]*fl; g=d[i+1]*fl; b=d[i+2]*fl;
+              l=0.299*r+0.587*g+0.114*b;
+              r=l+(r-l)*0.92; g=l+(g-l)*0.92; b=l+(b-l)*0.92;
+              r=(r-128)*1.12+128; g=(g-128)*1.12+128; b=(b-128)*1.12+128;       // punchier contrast
+              l=(0.299*r+0.587*g+0.114*b)/255; if(l<0)l=0; else if(l>1)l=1; t=(1-l)*(1-l); u=l*l;
+              r=r+3*t+4*u; g=g+5*t+4*u; b=b*1.02+2*t+6*u;                        // neutral whites, faint green in the shadows
+              r=r*0.95+9; g=g*0.95+9; b=b*0.95+10;                               // slightly lifted blacks
+              seed=(seed*1664525+1013904223)|0; gr=((seed>>>24)-128)/128*13;     // film grain
+              d[i]=r+gr; d[i+1]=g+gr; d[i+2]=b+gr;
+            }
           }
           x.putImageData(id,0,0);
-          var R=Math.sqrt(cw*cw+ch*ch)/2, vg=x.createRadialGradient(cw/2,ch/2,R*0.38,cw/2,ch/2,R);
-          vg.addColorStop(0,"rgba(18,10,4,0)"); vg.addColorStop(0.5,"rgba(18,10,4,0.23)"); vg.addColorStop(1,"rgba(18,10,4,0.62)");
+          var vg=x.createRadialGradient(cx,cy,RR*0.42,cx,cy,RR);
+          vg.addColorStop(0,"rgba(10,9,10,0)"); vg.addColorStop(0.5,"rgba(10,9,10,0.22)"); vg.addColorStop(1,"rgba(10,9,10,0.66)");
           x.fillStyle=vg; x.fillRect(0,0,cw,ch);
-          var fs=Math.max(14, Math.round(Math.min(cw,ch)*0.026));
-          x.font="600 "+fs+"px Georgia, 'Times New Roman', serif"; x.textAlign="right"; x.textBaseline="alphabetic";
-          x.shadowColor="rgba(40,25,10,.55)"; x.shadowBlur=fs*0.35; x.fillStyle="rgba(245,236,220,.9)";
-          x.fillText("Karim & Danya  ·  26 . 12 . 26", cw-fs*1.1, ch-fs*1.0);
+          var fs=Math.max(14, Math.round(Math.min(cw,ch)*0.032));
+          x.font="700 "+fs+"px 'Courier New', Courier, monospace"; x.textAlign="right"; x.textBaseline="alphabetic";
+          x.shadowColor="rgba(255,120,20,.55)"; x.shadowBlur=fs*0.3; x.fillStyle="rgba(255,150,40,.95)";
+          x.fillText("26 12 '26", cw-fs*1.1, ch-fs*1.0);
           c.toBlob(function(bl){ bl ? resolve(bl) : reject(new Error("toBlob")); }, "image/jpeg", 0.9);
         }catch(e){ reject(e); }
       };
