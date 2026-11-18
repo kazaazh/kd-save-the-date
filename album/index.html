@@ -169,7 +169,7 @@ li.fail .bar i{background:#a4453f}
       .then(function(){ it.state="done"; it.progress=1; doneCount++; }, function(err){ it.state="fail"; try{ console.log("[album] upload failed", String(err)); }catch(e){} });
   }
 
-  // ===== film look: soft glow, amber tone, brown shadows, lifted blacks, grain, dark edges, small date stamp =====
+  // ===== film look: white direct-flash on the subject, neutral whites, soft highlight roll-off, fine grain and darker aged edges =====
   function vintage(file){
     return new Promise(function(resolve, reject){
       var url=URL.createObjectURL(file), img=new Image();
@@ -179,33 +179,93 @@ li.fail .bar i{background:#a4453f}
           var cw=Math.max(1,Math.round(w*sc)), ch=Math.max(1,Math.round(h*sc));
           var c=document.createElement("canvas"); c.width=cw; c.height=ch; var x=c.getContext("2d");
           x.drawImage(img,0,0,cw,ch); URL.revokeObjectURL(url);
-          // soft glow: a small blurred copy laid back over the photo
-          var sm=document.createElement("canvas"); sm.width=Math.max(1,Math.round(cw/14)); sm.height=Math.max(1,Math.round(ch/14));
-          var sx=sm.getContext("2d"); sx.imageSmoothingEnabled=true; sx.drawImage(c,0,0,sm.width,sm.height);
+
+          // ---- look settings (all in one place) ----
+          var FLASH=0.25;      // extra light on the subject (0.25 = +25% at the flash centre)
+          var FLASH_W=0.30;    // how wide the flash spreads (bigger = wider, softer)
+          var VIG=0.44;        // how much the far corners darken (0 = none)
+          var SAT=0.90;        // colour strength (1 = unchanged)
+          var GRAIN=5.2;       // grain strength in the mid tones
+          var MIST=0.07;       // overall softness
+          var BLOOM=0.30;      // white glow around bright areas only
+          var DEWARM=0.55;     // how much of a yellow room-light cast is removed (0 = off). Never adds warmth.
+          var FOLLOW=0.65;     // how far the flash centre moves toward the faces (0 = always the middle)
+
+          // ---- small blurred copy (two steps down so it is smooth on every browser) ----
+          var md=document.createElement("canvas"); md.width=Math.max(1,Math.round(cw/4)); md.height=Math.max(1,Math.round(ch/4));
+          var mx=md.getContext("2d"); mx.imageSmoothingEnabled=true; mx.drawImage(c,0,0,md.width,md.height);
+          var sw=Math.max(1,Math.round(cw/16)), sh=Math.max(1,Math.round(ch/16));
+          var sm=document.createElement("canvas"); sm.width=sw; sm.height=sh;
+          var sx=sm.getContext("2d"); sx.imageSmoothingEnabled=true; sx.drawImage(md,0,0,sw,sh);
+          var sid=sx.getImageData(0,0,sw,sh), s=sid.data, n=sw*sh, j, k, q, v, r, g, b, l, cb, cr, mxc, mnc;
+
+          // ---- read the small copy: where are the faces, and is the room light yellow? ----
+          var skN=0, skX=0, skY=0, wN=0, wR=0, wG=0, wB=0;
+          for(j=0;j<n;j++){ k=j*4; r=s[k]; g=s[k+1]; b=s[k+2];
+            l=0.299*r+0.587*g+0.114*b;
+            cb=128-0.169*r-0.331*g+0.5*b; cr=128+0.5*r-0.419*g-0.081*b;
+            if(l>28 && l<245 && cr>136 && cr<176 && cb>82 && cb<126){ skN++; skX+=j%sw; skY+=(j/sw)|0; }   // skin-like, light to dark
+            mxc=r>g?(r>b?r:b):(g>b?g:b); mnc=r<g?(r<b?r:b):(g<b?g:b);
+            if(l>120 && l<250 && (mxc-mnc)<0.30*mxc){ wN++; wR+=r; wG+=g; wB+=b; }                            // near-white, near-grey areas
+          }
+          var fx=0.5, fy=0.46;                                    // flash centre as a share of width, height
+          if(skN>n*0.012 && skN<n*0.6){
+            fx+=FOLLOW*((skX/skN+0.5)/sw-fx); fy+=FOLLOW*((skY/skN+0.5)/sh-0.04-fy);
+            if(fx<0.32)fx=0.32; else if(fx>0.68)fx=0.68; if(fy<0.32)fy=0.32; else if(fy>0.60)fy=0.60;
+          }
+          var kr=1, kb=1;                                         // only ever pulls yellow toward white
+          if(DEWARM>0 && wN>n*0.02 && wB<wG*0.985 && wR>wB){
+            kb=1+DEWARM*(wG/wB-1); kr=1+DEWARM*(wG/wR-1);
+            if(kb>1.16)kb=1.16; if(kr<0.93)kr=0.93; else if(kr>1)kr=1;
+          }
+
+          // ---- softness, then a white glow that comes from the bright areas only ----
           x.imageSmoothingEnabled=true; try{ x.imageSmoothingQuality="high"; }catch(e){}
-          x.globalAlpha=0.10; x.drawImage(sm,0,0,cw,ch);
-          x.globalCompositeOperation="screen"; x.globalAlpha=0.26; x.drawImage(sm,0,0,cw,ch);
+          x.globalAlpha=MIST; x.drawImage(sm,0,0,cw,ch);
+          for(j=0;j<n;j++){ k=j*4; l=(0.299*s[k]+0.587*s[k+1]+0.114*s[k+2])/255;
+            v=(l-0.60)/0.32; v=v<0?0:(v>1?1:v); v=v*v*l*255; s[k]=v; s[k+1]=v; s[k+2]=v; s[k+3]=255; }
+          sx.putImageData(sid,0,0);
+          x.globalCompositeOperation="screen"; x.globalAlpha=BLOOM; x.drawImage(sm,0,0,cw,ch);
           x.globalCompositeOperation="source-over"; x.globalAlpha=1;
-          var id=x.getImageData(0,0,cw,ch), d=id.data, i=0, r, g, b, l, t, u, gr, fl, px, py, dx, dy, seed=1234567;
-          var cx=cw/2, cy=ch*0.46, RR=Math.sqrt(cw*cw+ch*ch)/2;
-          for(py=0;py<ch;py++){ dy=py-cy;
+
+          // ---- lookup tables (all the slow maths happens here, not per pixel) ----
+          // tone: lifted blacks, a little more contrast from the mid tones up, then a soft shoulder so whites roll off instead of clipping
+          var TN=512, tR=new Float32Array(TN), tG=new Float32Array(TN), tB=new Float32Array(TN), gA=new Float32Array(TN), t, y, e;
+          for(j=0;j<TN;j++){
+            t=j/255; y=t; e=t-0.25; if(e>0) y+=0.16*e*e/(e+0.15);
+            if(y>0.72) y=0.72+0.31*(1-Math.exp(-(y-0.72)/0.31));
+            if(y>1)y=1; e=(1-y)*(1-y);
+            tR[j]=255*(0.030+0.970*y)+0.5*e; tG[j]=255*(0.030+0.970*y)+1.0*e; tB[j]=255*(0.030+0.970*y)+2.5*e;   // neutral whites, a breath of cool in the deepest shadows
+            e=t>1?1:t; gA[j]=GRAIN*(0.45+0.55*(e<0.2?e/0.2:1))*(1-0.72*e*e);                                       // grain: most in the mid tones, little in highlights
+          }
+          // light: flash gain falling off smoothly from the centre, times edge darkening; plus how much grain at that distance
+          var QN=1024, QS=400, lg=new Float32Array(QN), gg=new Float32Array(QN), rn;
+          for(j=0;j<QN;j++){ q=j/QS; rn=Math.sqrt(q);
+            e=(rn-0.50)/0.70; e=e<0?0:(e>1?1:e); e=e*e*(3-2*e);
+            lg[j]=(1+FLASH*Math.exp(-q/FLASH_W))*(1-VIG*e);
+            gg[j]=0.50+0.62*(rn>1?1:rn);
+          }
+          // grain tile: slightly clumped on large photos so it reads as film, not digital noise
+          var GT=512, GM=GT-1, raw=new Float32Array(GT*GT), gt=new Float32Array(GT*GT), seed=1234567, big=Math.max(cw,ch)>1400;
+          for(j=0;j<GT*GT;j++){ seed=(seed*1664525+1013904223)|0; q=(seed>>>24); seed=(seed*1664525+1013904223)|0; raw[j]=(q+(seed>>>24)-255)/104; }
+          for(j=0;j<GT*GT;j++){ k=j&GM; q=j>>9;
+            gt[j]= big ? (raw[j]+raw[(q<<9)|((k+1)&GM)]+raw[(((q+1)&GM)<<9)|k]+raw[(((q+1)&GM)<<9)|((k+1)&GM)])*0.5 : raw[j]; }
+
+          // ---- one pass over the pixels ----
+          var id=x.getImageData(0,0,cw,ch), d=id.data, i=0, px, py, dx, dy, dy2, gn, gr, li, row;
+          var cx=cw*fx, cy=ch*fy, qk=QS/((cw*cw+ch*ch)/4), DS=1-SAT, qm=QN-1;
+          for(py=0;py<ch;py++){ dy=py-cy; dy2=dy*dy; row=(py&GM)<<9;
             for(px=0;px<cw;px++, i+=4){ dx=px-cx;
-              fl=1-Math.sqrt(dx*dx+dy*dy)/RR/0.75; fl=1+0.16*(fl>0?fl:0);       // flash: brighter toward the middle
-              r=d[i]*fl; g=d[i+1]*fl; b=d[i+2]*fl;
-              l=0.299*r+0.587*g+0.114*b;
-              r=l+(r-l)*0.92; g=l+(g-l)*0.92; b=l+(b-l)*0.92;
-              r=(r-128)*1.12+128; g=(g-128)*1.12+128; b=(b-128)*1.12+128;       // punchier contrast
-              l=(0.299*r+0.587*g+0.114*b)/255; if(l<0)l=0; else if(l>1)l=1; t=(1-l)*(1-l); u=l*l;
-              r=r+3*t+4*u; g=g+5*t+4*u; b=b*1.02+2*t+6*u;                        // neutral whites, faint green in the shadows
-              r=r*0.95+9; g=g*0.95+9; b=b*0.95+10;                               // slightly lifted blacks
-              seed=(seed*1664525+1013904223)|0; gr=((seed>>>24)-128)/128*13;     // film grain
-              d[i]=r+gr; d[i+1]=g+gr; d[i+2]=b+gr;
+              q=((dx*dx+dy2)*qk)|0; if(q>qm)q=qm; gn=lg[q];
+              r=d[i]*gn*kr; g=d[i+1]*gn; b=d[i+2]*gn*kb;
+              l=0.299*r+0.587*g+0.114*b; li=l|0; if(li>511)li=511; l*=DS;
+              gr=gt[row|(px&GM)]*gA[li]*gg[q];
+              r=(l+r*SAT)|0; g=(l+g*SAT)|0; b=(l+b*SAT)|0;
+              if(r>511)r=511; if(g>511)g=511; if(b>511)b=511;
+              d[i]=tR[r]+gr; d[i+1]=tG[g]+gr; d[i+2]=tB[b]+gr;
             }
           }
           x.putImageData(id,0,0);
-          var vg=x.createRadialGradient(cx,cy,RR*0.42,cx,cy,RR);
-          vg.addColorStop(0,"rgba(10,9,10,0)"); vg.addColorStop(0.5,"rgba(10,9,10,0.22)"); vg.addColorStop(1,"rgba(10,9,10,0.66)");
-          x.fillStyle=vg; x.fillRect(0,0,cw,ch);
           c.toBlob(function(bl){ bl ? resolve(bl) : reject(new Error("toBlob")); }, "image/jpeg", 0.9);
         }catch(e){ reject(e); }
       };
