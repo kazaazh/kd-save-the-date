@@ -218,7 +218,6 @@ button{font:inherit;color:inherit}
 .time b{font-style:normal;font-weight:600;font-size:22px;letter-spacing:.12em;color:var(--ink);direction:ltr;unicode-bidi:isolate;margin-inline-start:.2em}
 .place{line-height:1.5}
 .floor{margin:8px 0 0;font-family:var(--font-serif);font-size:14.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
-[dir="rtl"] .floor{letter-spacing:.04em;font-size:15.5px}
 .map{display:block;position:relative;margin:26px auto 0;max-width:340px;border:1.5px solid var(--olive);padding:4px;background:#f4e7d8;box-shadow:0 10px 22px -16px rgba(60,70,30,.7),0 0 0 3px rgba(255,255,255,.5);text-decoration:none;color:inherit;transform:rotate(-1.2deg);transition:transform .2s;-webkit-tap-highlight-color:transparent}
 .map:active{transform:rotate(-1.2deg) scale(.985)}
 .map svg{display:block;width:100%;aspect-ratio:16/10}
@@ -301,13 +300,12 @@ button{font:inherit;color:inherit}
 .rsvpsheet h2{font-weight:600;font-size:24px;letter-spacing:.06em}
 .hint{line-height:1.9}
 .count + .cal{margin-top:20px}
-[dir="rtl"] .dbig{direction:rtl;letter-spacing:0}
-[dir="rtl"] .dven{font-family:var(--font-ar-title);font-weight:700;font-size:23px;line-height:1.5}
+[dir="rtl"] .dbig[data-t="time"]{direction:rtl;letter-spacing:0}
+[dir="rtl"] .dv1{direction:ltr}
+[dir="rtl"] .drow .dv1[data-t="whenDay"]{direction:rtl}
 [dir="rtl"] .mapcap{direction:rtl}
-[dir="rtl"] .mapcap b{font-family:var(--font-ar-title);letter-spacing:0;font-size:16.5px}
 [dir="rtl"] .map svg text[data-t]{letter-spacing:0;font-style:normal;font-family:var(--font-ar-title);font-size:10px}
 [dir="rtl"] .map svg text[data-t="mGulf"]{font-size:13px}
-[dir="rtl"] .todaybtn small{letter-spacing:0!important;font-size:14px!important}
 .press{text-shadow:0 1px 0 rgba(255,255,255,.6)}
 .bismillah{font-family:var(--font-ar-title);font-weight:700;font-size:26px;line-height:1.9;color:var(--ink);margin:0 0 2px;direction:rtl;text-shadow:0 1px 0 rgba(255,255,255,.85)}
 .eyebrow{font-family:var(--font-serif);font-weight:600;font-size:14px;letter-spacing:.44em;text-transform:uppercase;color:var(--ink-soft);margin:14px 0 0;padding-inline-start:.44em;direction:ltr}
@@ -620,7 +618,7 @@ button{font:inherit;color:inherit}
       guestPh:"Guest name", sendErr:"Something went wrong. Please try again.", chgCount:"Our number of guests has changed"
     },
     ar:{
-      hint:"وصلتكم الدعوة<br>المسوا الختم", envTitle:"الدعوة", envDay:"الليلة", envAfter:"شكراً لكم", hintDay:"الليلة الساعة ٦<br>المسوا الختم", hintAfter:"كلمة منّا<br>المسوا الختم", todayH:"اليوم موعدنا", todayP:"بانتظاركم الليلة الساعة ٦ مساءً", dir:"الاتجاهات", afterH:"شكراً لكم", afterP:"لأنكم شاركتمونا أمسيتنا وملأتموها حبّاً. حضوركم جعلها لا تُنسى.", albumBtn:"شاركونا صوركم", albumSub:"أضيفوها إلى ألبومنا", time:"٦:٠٠ مساءً", venue:"فيدا دبي مارينا<br>ونادي اليخوت", venue1:"فيدا دبي مارينا ونادي اليخوت", area:"دبي مارينا، الإمارات", mGulf:"الخليج العربي", mSzr:"شارع الشيخ زايد", mMarina:"المارينا", mJbr:"جي بي آر", cdLabel:"العدّ التنازلي", arrH:"الوصول", arrP:"خدمة صفّ السيارات (الفاليه) متوفّرة لجميع الضيوف.", when:"الموعد", where:"المكان", whenDay:"السبت ٢٦ كانون الأول (ديسمبر) ٢٠٢٦", for:"لحضور خطوبة", at:"الساعة", floor:"الطابق السادس", mapTap:"اضغطوا للاتجاهات", cal:"أضف إلى التقويم",
+      hint:"وصلتكم الدعوة<br>المسوا الختم", envTitle:"الدعوة", envDay:"الليلة", envAfter:"شكراً لكم", hintDay:"الليلة الساعة ٦<br>المسوا الختم", hintAfter:"كلمة منّا<br>المسوا الختم", todayH:"اليوم موعدنا", todayP:"بانتظاركم الليلة الساعة ٦ مساءً", dir:"الاتجاهات", afterH:"شكراً لكم", afterP:"لأنكم شاركتمونا أمسيتنا وملأتموها حبّاً. حضوركم جعلها لا تُنسى.", albumBtn:"شاركونا صوركم", albumSub:"أضيفوها إلى ألبومنا", time:"٦:٠٠ مساءً", venue:"Vida Dubai Marina<br>&amp; Yacht Club", venue1:"Vida Dubai Marina & Yacht Club", area:"Dubai Marina, UAE", mGulf:"الخليج العربي", mSzr:"شارع الشيخ زايد", mMarina:"المارينا", mJbr:"جي بي آر", cdLabel:"العدّ التنازلي", arrH:"الوصول", arrP:"خدمة Valet متوفّرة لجميع الضيوف.", when:"الموعد", where:"المكان", whenDay:"السبت ٢٦ كانون الأول (ديسمبر) ٢٠٢٦", for:"لحضور خطوبة", at:"الساعة", floor:"6th Floor", mapTap:"اضغطوا للاتجاهات", cal:"أضف إلى التقويم",
       quote:"بعض الحكايات تبدأ قبل أول كلمة. حكايتنا بدأت في دعاء أمهاتنا. في هذا اليوم تلتقي عائلتانا على وعدٍ يدوم العمر، ولا شيء يشرّفنا أكثر من أن تكونوا إلى جانبنا.",
       sign:"بكل الحب", note:"احفظوا هذا اليوم في قلوبكم، والتفاصيل تصلكم قريباً.",
       rsvp:"هل تغيّرت خططكم؟", tap:"أخبرونا هنا", rsvpTitle:"هل تغيّرت خططكم؟", rsvpLead:"أخبرونا لنرتّب الأمسية على أساسه.", by:"نتمنى أن نحتفل بهذا اليوم المميز معكم، ونرجو تأكيد الحضور قبل <b>٢٠ نوفمبر</b>.",
