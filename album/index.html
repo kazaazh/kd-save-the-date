@@ -169,6 +169,32 @@ li.fail .bar i{background:#a4453f}
       .then(function(){ it.state="done"; it.progress=1; doneCount++; }, function(err){ it.state="fail"; try{ console.log("[album] upload failed", String(err)); }catch(e){} });
   }
 
+  // ===== album-page frame: a photographed black album leaf with a cut-out window. The photo is placed inside the window, never cropped;
+  // if its shape differs from the window, the print simply shows a little more white paper on two sides.
+  var FRAMES={ up:{src:"frame/frame-up.webp", w:1920, h:2560, win:[480,572,1442,1906], top:[214,210,207], bot:[214,210,207]},
+               wide:{src:"frame/frame-wide.webp", w:2560, h:1920, win:[484,382,2074,1456], top:[223,221,218], bot:[223,221,218]} };
+  Object.keys(FRAMES).forEach(function(k){ var f=FRAMES[k]; f.img=new Image(); f.ready=false;
+    f.img.onload=function(){ f.ready=true;
+      try{ var t=document.createElement("canvas"); t.width=f.w; t.height=f.h; var tx=t.getContext("2d"); tx.drawImage(f.img,0,0);
+        var mx=Math.round((f.win[0]+f.win[2])/2), a1=tx.getImageData(mx-60,f.win[1]-26,120,8).data, a2=tx.getImageData(mx-60,f.win[3]+18,120,8).data;
+        var avg=function(d){ var r=0,g=0,b=0,n=d.length/4,i; for(i=0;i<d.length;i+=4){ r+=d[i]; g+=d[i+1]; b+=d[i+2]; } return [Math.round(r/n),Math.round(g/n),Math.round(b/n)]; };
+        f.top=avg(a1); f.bot=avg(a2); t.width=t.height=1; }catch(e){}
+    };
+    f.img.src=f.src; });
+  function frameIt(c){
+    var f = (c.width/c.height > 1.03) ? FRAMES.wide : FRAMES.up;
+    if(!f.ready) return c;
+    var o=document.createElement("canvas"); o.width=f.w; o.height=f.h; var x=o.getContext("2d");
+    var wx=f.win[0], wy=f.win[1], ww=f.win[2]-f.win[0], wh=f.win[3]-f.win[1];
+    var g=x.createLinearGradient(0,wy,0,wy+wh); g.addColorStop(0,"rgb("+f.top.join(",")+")"); g.addColorStop(1,"rgb("+f.bot.join(",")+")");
+    x.fillStyle=g; x.fillRect(wx-6,wy-6,ww+12,wh+12);
+    var sc=Math.min(ww/c.width, wh/c.height), dw=Math.round(c.width*sc), dh=Math.round(c.height*sc);
+    x.imageSmoothingEnabled=true; try{ x.imageSmoothingQuality="high"; }catch(e){}
+    x.drawImage(c, wx+Math.round((ww-dw)/2), wy+Math.round((wh-dh)/2), dw, dh);
+    x.drawImage(f.img,0,0,f.w,f.h);
+    return o;
+  }
+
   // ===== film look: white direct-flash on the subject, neutral whites, soft highlight roll-off, fine grain and darker aged edges =====
   function vintage(file){
     return new Promise(function(resolve, reject){
@@ -266,7 +292,8 @@ li.fail .bar i{background:#a4453f}
             }
           }
           x.putImageData(id,0,0);
-          c.toBlob(function(bl){ bl ? resolve(bl) : reject(new Error("toBlob")); }, "image/jpeg", 0.9);
+          var outc=c; try{ outc=frameIt(c); }catch(e){ outc=c; }
+          outc.toBlob(function(bl){ bl ? resolve(bl) : reject(new Error("toBlob")); }, "image/jpeg", 0.9);
         }catch(e){ reject(e); }
       };
       img.onerror=function(){ URL.revokeObjectURL(url); reject(new Error("decode")); };
