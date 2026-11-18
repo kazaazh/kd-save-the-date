@@ -165,7 +165,10 @@ li.fail .bar i{background:#a4453f}
   function process(it){
     it.state = it.isVideo ? "up" : "prep"; refreshStatus();
     var prep = it.isVideo ? Promise.resolve(it.file) : vintage(it.file).then(function(blob){ if(it.thumbUrl){ try{ URL.revokeObjectURL(it.thumbUrl); }catch(e){} } var u=URL.createObjectURL(blob); it.el.querySelector(".thumb").style.backgroundImage="url("+u+")"; return blob; }, function(){ return it.file; });
-    return prep.then(function(blob){ it.state="up"; refreshStatus(); return upload(it, blob); })
+    return prep.then(function(blob){ it.state="up"; refreshStatus();
+        if(it.isVideo || blob===it.file) return upload(it, blob, {from:0, to:1});
+        var stamp=baseName();
+        return upload(it, blob, {from:0, to:0.5, base:stamp}).then(function(){ return upload(it, it.file, {from:0.5, to:1, base:stamp, original:true}); }); })
       .then(function(){ it.state="done"; it.progress=1; doneCount++; }, function(err){ it.state="fail"; try{ console.log("[album] upload failed", String(err)); }catch(e){} });
   }
 
@@ -208,28 +211,32 @@ li.fail .bar i{background:#a4453f}
 
   // ===== upload: ask the script for an upload session in the album folder, then send the file to Google Drive in pieces =====
   function pad(n){ return (n<10?"0":"")+n; }
-  function fileName(it, blob){
+  function baseName(){
     var d=new Date(), who=(guest.value||"").trim().replace(/[\\/:*?"<>|\u0000-\u001f]+/g," ").slice(0,40);
-    var ext = it.isVideo ? ((it.file.name||"").match(/\.([a-z0-9]{2,5})$/i)||[0,(/quicktime/.test(it.file.type)?"mov":"mp4")])[1].toLowerCase() : "jpg";
-    return (who?who+" - ":"")+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"-"+pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds())+"-"+Math.random().toString(36).slice(2,6)+"."+ext;
+    return (who?who+" - ":"")+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"-"+pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds())+"-"+Math.random().toString(36).slice(2,6);
   }
+  function extOf(file, fallback){ return ((file.name||"").match(/\.([a-z0-9]{2,5})$/i)||[0,fallback])[1].toLowerCase(); }
   function api(body){
     return fetch(ALBUM_ENDPOINT,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)}).then(function(r){ return r.json(); });
   }
   function sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
-  function upload(it, blob){
+  function upload(it, blob, o){
+    function prog(f){ it.progress=o.from+(o.to-o.from)*f; paint(it); }
     if(!ALBUM_ENDPOINT){ // preview: pretend
-      var p=0; return new Promise(function(res){ var t=setInterval(function(){ p+=0.2; it.progress=Math.min(1,p); paint(it); if(p>=1){ clearInterval(t); res(); } },180); });
+      var p=0; return new Promise(function(res){ var t=setInterval(function(){ p+=0.2; prog(Math.min(1,p)); if(p>=1){ clearInterval(t); res(); } },180); });
     }
-    var mime = it.isVideo ? (it.file.type||"video/mp4") : "image/jpeg", size=blob.size;
-    return api({action:"start", name:fileName(it,blob), mimeType:mime, size:size, origin:location.origin}).then(function(r){
+    var size=blob.size, mime, name;
+    if(it.isVideo){ mime=it.file.type||"video/mp4"; name=(o.base||baseName())+"."+extOf(it.file, /quicktime/.test(mime)?"mov":"mp4"); }
+    else if(o.original){ mime=/^image\//.test(it.file.type)?it.file.type:"image/jpeg"; name=o.base+" (original)."+extOf(it.file,"jpg"); }
+    else { mime="image/jpeg"; name=(o.base||baseName())+".jpg"; }
+    return api({action:"start", name:name, mimeType:mime, size:size, origin:location.origin, original:!!o.original}).then(function(r){
       if(!r || !r.ok || !r.url) throw new Error("start: "+(r&&r.error||"no session"));
       var url=r.url, offset=0, direct=true, tries=0;
       function sendDirect(piece, end){
         return new Promise(function(resolve, reject){
           var x=new XMLHttpRequest(); x.open("PUT", url, true);
           x.setRequestHeader("Content-Range","bytes "+offset+"-"+(end-1)+"/"+size);
-          x.upload.onprogress=function(e){ if(e.lengthComputable){ it.progress=(offset+e.loaded)/size; paint(it); } };
+          x.upload.onprogress=function(e){ if(e.lengthComputable) prog((offset+e.loaded)/size); };
           x.onload=function(){ (x.status===200||x.status===201||x.status===308) ? resolve(x.status) : reject(new Error("status "+x.status)); };
           x.onerror=function(){ reject(new Error("network")); }; x.ontimeout=function(){ reject(new Error("timeout")); };
           x.send(piece);
@@ -243,7 +250,7 @@ li.fail .bar i{background:#a4453f}
       function next(){
         if(offset>=size) return Promise.resolve();
         var step = direct ? CHUNK : 4*1024*1024, end=Math.min(size, offset+step), piece=blob.slice(offset,end);
-        return (direct?sendDirect(piece,end):sendRelay(piece,end)).then(function(){ offset=end; tries=0; it.progress=offset/size; paint(it); return next(); }, function(err){
+        return (direct?sendDirect(piece,end):sendRelay(piece,end)).then(function(){ offset=end; tries=0; prog(offset/size); return next(); }, function(err){
           tries++;
           if(direct && offset===0 && tries>=1){ direct=false; tries=0; return next(); }   // the browser could not reach Drive directly: use the relay
           if(tries>4) throw err;

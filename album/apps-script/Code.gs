@@ -25,6 +25,20 @@ function albumFolder_() {
   return folder;
 }
 
+// Untouched photos go into an "Originals" folder inside the album folder.
+function originalsFolder_() {
+  var props = PropertiesService.getScriptProperties();
+  var id = props.getProperty("ORIGINALS_ID");
+  if (id) {
+    try { return DriveApp.getFolderById(id); } catch (e) {}
+  }
+  var parent = albumFolder_();
+  var it = parent.getFoldersByName("Originals");
+  var folder = it.hasNext() ? it.next() : parent.createFolder("Originals");
+  props.setProperty("ORIGINALS_ID", folder.getId());
+  return folder;
+}
+
 function json_(o) {
   return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);
 }
@@ -61,7 +75,7 @@ function start_(d) {
       "X-Upload-Content-Length": String(size),
       Origin: origin
     },
-    payload: JSON.stringify({ name: name, parents: [albumFolder_().getId()] }),
+    payload: JSON.stringify({ name: name, parents: [(d.original ? originalsFolder_() : albumFolder_()).getId()] }),
     muteHttpExceptions: true
   });
   var h = res.getAllHeaders();
