@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Karim and Danya//Engagement//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:kd-engagement-20261226@kazaazh.github.io
+DTSTAMP:20261118T100000Z
+DTSTART:20261226T140000Z
+DTEND:20261226T190000Z
+SUMMARY:Karim & Danya · Engagement
+LOCATION:Vida Dubai Marina & Yacht Club\, 6th Floor\, Dubai Marina\, Dubai\, UAE
+GEO:25.0724088;55.1354899
+URL:https://kazaazh.github.io/kd-save-the-date/invitation/
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:Karim & Danya engagement tomorrow at 6 PM
+END:VALARM
+END:VEVENT
+END:VCALENDAR
